@@ -15,3 +15,8 @@ and open the template in the editor.
         ?>
     </body>
 </html>
+
+<?php
+//include_once realpath(__DIR__) . './model/testes/service/TesteCoordenadaService.php';
+include_once realpath(__DIR__) . './model/testes/service/TesteRastreadorService.php';
+?>
