@@ -1,5 +1,8 @@
 <?php
 
+include_once realpath(__DIR__) . '/../../model/entity/Rastreador.php';
+include_once realpath(__DIR__) . '/../../model/dao/criteria/RastreadorCriteria.php';
+
 class RastreadorDAO {
 
     public function create(mysqli $conexao, Rastreador $entity) {
@@ -50,13 +53,13 @@ class RastreadorDAO {
                 if (array_key_exists(RastreadorCriteria::SERIAL_EQ, $criteria)) {
                     $aux = $criteria[RastreadorCriteria::SERIAL_EQ];
                     if ($aux != null && strlen($aux) > 0) {
-                        $sql .= " and serial = '$aux'";
+                        $sql .= " and serial = '$aux' COLLATE latin1_bin";
                     }
                 }
                 if (array_key_exists(RastreadorCriteria::NOME_EQ, $criteria)) {
                     $aux = $criteria[RastreadorCriteria::NOME_EQ];
                     if ($aux != null && strlen($aux) > 0) {
-                        $sql .= " and nome = '$aux'";
+                        $sql .= " and nome = '$aux' COLLATE latin1_bin";
                     }
                 }
                 if (array_key_exists(RastreadorCriteria::NOME_LK, $criteria)) {

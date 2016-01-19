@@ -13,4 +13,8 @@ class ServiceLocator {
         return new RastreadorService();
     }
 
+    public static function getUsuarioService() {
+        return new UsuarioService();
+    }
+
 }

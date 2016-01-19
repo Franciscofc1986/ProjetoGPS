@@ -10,6 +10,10 @@ class Usuario extends BaseEntity {
     protected $dataHora;
     protected $rastreadorArray;
 
+    public function __toString() {
+        return "$this->id# $this->login# $this->senha# $this->nome# $this->dataHora";
+    }
+
     public function getLogin() {
         return $this->login;
     }
