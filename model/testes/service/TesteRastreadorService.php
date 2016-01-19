@@ -9,7 +9,7 @@ testeReadByCriteria();
 
 function testeCreate() {
     $entity = new Rastreador();
-    $entity->setSerial("PQ262");
+    $entity->setSerial("PQ405");
     $entity->setNome("Rastreador teste");
     $entity->setDataHora(date('Y-m-d H-i-s'));
 
@@ -21,13 +21,13 @@ function testeCreate() {
 }
 
 function testeDelete() {
-    echo "Resultado: " . ServiceLocator::getRastreadorService()->delete(2);
+    echo "Resultado: " . ServiceLocator::getRastreadorService()->delete(9);
 }
 
 function testeUpdate() {
     $entity = new Rastreador();
     $entity->setId(14);
-    $entity->setSerial("PQ400");
+    $entity->setSerial("PQ402");
     $entity->setNome("Rastreador teste");
     $entity->setDataHora(date('Y-m-d H-i-s'));
     $coordenada = new Coordenada();

@@ -10,6 +10,7 @@ class Rastreador extends BaseEntity {
     protected $dataHora;
     protected $ultimaCoordenada;
     protected $usuarioArray;
+    protected $coordenadaArray;
 
     public function __toString() {
         return "$this->id# $this->serial# $this->nome# $this->dataHora# $this->ultimaCoordenada";
@@ -35,6 +36,10 @@ class Rastreador extends BaseEntity {
         return $this->usuarioArray;
     }
 
+    public function getCoordenadaArray() {
+        return $this->coordenadaArray;
+    }
+
     public function setSerial($serial) {
         $this->serial = $serial;
     }
@@ -53,6 +58,10 @@ class Rastreador extends BaseEntity {
 
     public function setUsuarioArray($usuarioArray) {
         $this->usuarioArray = $usuarioArray;
+    }
+
+    public function setCoordenadaArray($coordenadaArray) {
+        $this->coordenadaArray = $coordenadaArray;
     }
 
 }
