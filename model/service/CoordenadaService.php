@@ -1,17 +1,26 @@
 <?php
 
 include_once realpath(__DIR__) . '/../../model/entity/Coordenada.php';
+include_once realpath(__DIR__) . '/../../model/entity/Rastreador.php';
 include_once realpath(__DIR__) . '/../../model/dao/CoordenadaDAO.php';
+include_once realpath(__DIR__) . '/../../model/dao/RastreadorDAO.php';
 include_once realpath(__DIR__) . '/../../model/service/ConnectionManager.php';
 
 class CoordenadaService {
 
-    public function create(Coordenada $entity) {
+    public function create(Coordenada $coordenada) {
         $resultado = false;
         try {
             $conexao = ConnectionManager::getConexao();
-            $dao = new CoordenadaDAO();
-            $resultado = $dao->create($conexao, $entity);
+            $coordenadaDAO = new CoordenadaDAO();
+            if ($coordenadaDAO->create($conexao, $coordenada)) {
+                $rastreadorDAO = new RastreadorDAO();
+                $rastreador = $rastreadorDAO->readById($conexao, $coordenada->getRastreador()->getId());
+                if ($rastreador != null) {
+                    $rastreador->setUltimaCoordenada($coordenada);
+                    $resultado = $rastreadorDAO->update($conexao, $rastreador);
+                }
+            }
             $conexao->commit();
         } catch (Exception $ex) {
             $conexao->rollback();

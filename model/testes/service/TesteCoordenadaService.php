@@ -44,7 +44,7 @@ function testeReadById() {
 
 function testeReadByCriteria() {
     $criteria = array();
-    $criteria[CoordenadaCriteria::RASTREADOR_EQ] = 3;
+    $criteria[CoordenadaCriteria::RASTREADOR_FK_EQ] = 3;
     $entityArray = ServiceLocator::getCoordenadaService()->readByCriteria($criteria);
     foreach ($entityArray as $entity) {
         echo $entity . "<br>";

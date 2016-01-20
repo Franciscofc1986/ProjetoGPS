@@ -54,8 +54,8 @@ class CoordenadaDAO {
                         $sql .= " and lower(data_hora) like lower('%$aux%')";
                     }
                 }
-                if (array_key_exists(CoordenadaCriteria::RASTREADOR_EQ, $criteria)) {
-                    $aux = $criteria[CoordenadaCriteria::RASTREADOR_EQ];
+                if (array_key_exists(CoordenadaCriteria::RASTREADOR_FK_EQ, $criteria)) {
+                    $aux = $criteria[CoordenadaCriteria::RASTREADOR_FK_EQ];
                     if ($aux != null && $aux > 0) {
                         $sql .= " and rastreador_fk = $aux";
                     }
