@@ -14,14 +14,7 @@ class CoordenadaService {
             $conexao = ConnectionManager::getConexao();
             $conexao->beginTransaction();
             $coordenadaDAO = new CoordenadaDAO();
-            if ($coordenadaDAO->create($conexao, $coordenada)) {
-                $rastreadorDAO = new RastreadorDAO();
-                $rastreador = $rastreadorDAO->readById($conexao, $coordenada->getRastreador()->getId());
-                if ($rastreador != null) {
-                    $rastreador->setUltimaCoordenada($coordenada);
-                    $resultado = $rastreadorDAO->update($conexao, $rastreador);
-                }
-            }
+            $resultado = $coordenadaDAO->create($conexao, $coordenada);
             $conexao->commit();
         } catch (Exception $ex) {
             $conexao->rollback();
