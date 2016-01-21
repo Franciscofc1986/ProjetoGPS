@@ -10,6 +10,7 @@ class RastreadorService {
         $resultado = false;
         try {
             $conexao = ConnectionManager::getConexao();
+            $conexao->beginTransaction();
             $dao = new RastreadorDAO();
             $resultado = $dao->create($conexao, $entity);
             $conexao->commit();
@@ -17,7 +18,7 @@ class RastreadorService {
             $conexao->rollback();
             echo $ex->getMessage();
         } finally {
-            $conexao->close();
+            $conexao = null;
         }
         return $resultado;
     }
@@ -26,6 +27,7 @@ class RastreadorService {
         $resultado = false;
         try {
             $conexao = ConnectionManager::getConexao();
+            $conexao->beginTransaction();
             $dao = new RastreadorDAO();
             $resultado = $dao->delete($conexao, $id);
             $conexao->commit();
@@ -33,7 +35,7 @@ class RastreadorService {
             $conexao->rollback();
             echo $ex->getMessage();
         } finally {
-            $conexao->close();
+            $conexao = null;
         }
         return $resultado;
     }
@@ -42,6 +44,7 @@ class RastreadorService {
         $entityArray = null;
         try {
             $conexao = ConnectionManager::getConexao();
+            $conexao->beginTransaction();
             $dao = new RastreadorDAO();
             $entityArray = $dao->readByCriteria($conexao, $criteria, $offset, $limit);
             $conexao->commit();
@@ -49,7 +52,7 @@ class RastreadorService {
             $conexao->rollback();
             echo $ex->getMessage();
         } finally {
-            $conexao->close();
+            $conexao = null;
         }
         return $entityArray;
     }
@@ -58,6 +61,7 @@ class RastreadorService {
         $entity = null;
         try {
             $conexao = ConnectionManager::getConexao();
+            $conexao->beginTransaction();
             $dao = new RastreadorDAO();
             $entity = $dao->readById($conexao, $id);
             $conexao->commit();
@@ -65,7 +69,7 @@ class RastreadorService {
             $conexao->rollback();
             echo $ex->getMessage();
         } finally {
-            $conexao->close();
+            $conexao = null;
         }
         return $entity;
     }
@@ -74,6 +78,7 @@ class RastreadorService {
         $resultado = false;
         try {
             $conexao = ConnectionManager::getConexao();
+            $conexao->beginTransaction();
             $dao = new RastreadorDAO();
             $resultado = $dao->update($conexao, $entity);
             $conexao->commit();
@@ -81,7 +86,7 @@ class RastreadorService {
             $conexao->rollback();
             echo $ex->getMessage();
         } finally {
-            $conexao->close();
+            $conexao = null;
         }
         return $resultado;
     }

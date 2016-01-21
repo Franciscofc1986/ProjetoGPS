@@ -7,7 +7,7 @@ include_once realpath(__DIR__) . '/../../model/dao/criteria/RastreadorCriteria.p
 include_once realpath(__DIR__) . '/../../model/dao/criteria/CoordenadaCriteria.php';
 include_once realpath(__DIR__) . '/../../model/service/RastreadorService.php';
 include_once realpath(__DIR__) . '/../../model/service/CoordenadaService.php';
-
+include_once realpath(__DIR__) . '/../../model/service/ConnectionManager.php';
 
 //$coordenadaArray = obterCoordenadasDeRastreador("PQ124");
 //foreach ($coordenadaArray as $coordenada) {

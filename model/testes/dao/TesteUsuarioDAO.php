@@ -36,6 +36,7 @@ include_once realpath(__DIR__) . '/../../../model/dao/criteria/UsuarioCriteria.p
 function testeCreate($entity) {
     $resultado = false;
     $conexao = ConnectionManager::getConexao();
+    $conexao->beginTransaction();
     $dao = new UsuarioDAO();
     if (!$dao->create($conexao, $entity)) {
         $conexao->rollback();
@@ -43,13 +44,14 @@ function testeCreate($entity) {
         $conexao->commit();
         $resultado = true;
     }
-    $conexao->close();
+    $conexao = null;
     return $resultado;
 }
 
 function testeDelete($id) {
     $resultado = false;
     $conexao = ConnectionManager::getConexao();
+    $conexao->beginTransaction();
     $dao = new UsuarioDAO();
     if (!$dao->delete($conexao, $id)) {
         $conexao->rollback();
@@ -57,13 +59,14 @@ function testeDelete($id) {
         $conexao->commit();
         $resultado = true;
     }
-    $conexao->close();
+    $conexao = null;
     return $resultado;
 }
 
 function testeUpdate($entity) {
     $resultado = false;
     $conexao = ConnectionManager::getConexao();
+    $conexao->beginTransaction();
     $dao = new UsuarioDAO();
     if (!$dao->update($conexao, $entity)) {
         $conexao->rollback();
@@ -71,12 +74,13 @@ function testeUpdate($entity) {
         $conexao->commit();
         $resultado = true;
     }
-    $conexao->close();
+    $conexao = null;
     return $resultado;
 }
 
 function testeReadById($id) {
     $conexao = ConnectionManager::getConexao();
+    $conexao->beginTransaction();
     $dao = new UsuarioDAO();
     $entity = $dao->readById($conexao, $id);
     if ($entity == null) {
@@ -84,12 +88,13 @@ function testeReadById($id) {
     } else {
         $conexao->commit();
     }
-    $conexao->close();
+    $conexao = null;
     return $entity;
 }
 
 function testeReadByCriteria($criteria) {
     $conexao = ConnectionManager::getConexao();
+    $conexao->beginTransaction();
     $dao = new UsuarioDAO();
     $entityArray = $dao->readByCriteria($conexao, $criteria);
     if ($entityArray == null) {
@@ -97,5 +102,6 @@ function testeReadByCriteria($criteria) {
     } else {
         $conexao->commit();
     }
+    $conexao = null;
     return $entityArray;
 }

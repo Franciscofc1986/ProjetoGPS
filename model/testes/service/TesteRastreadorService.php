@@ -5,11 +5,9 @@ include_once realpath(__DIR__) . '/../../../model/dao/criteria/RastreadorCriteri
 include_once realpath(__DIR__) . '/../../../model/service/RastreadorService.php';
 include_once realpath(__DIR__) . '/../../../model/service/ServiceLocator.php';
 
-testeReadByCriteria();
-
 function testeCreate() {
     $entity = new Rastreador();
-    $entity->setSerial("PQ405");
+    $entity->setSerial("PQ482");
     $entity->setNome("Rastreador teste");
     $entity->setDataHora(date('Y-m-d H-i-s'));
 
@@ -21,13 +19,13 @@ function testeCreate() {
 }
 
 function testeDelete() {
-    echo "Resultado: " . ServiceLocator::getRastreadorService()->delete(9);
+    echo "Resultado: " . ServiceLocator::getRastreadorService()->delete(5);
 }
 
 function testeUpdate() {
     $entity = new Rastreador();
-    $entity->setId(14);
-    $entity->setSerial("PQ402");
+    $entity->setId(5);
+    $entity->setSerial("PQ406");
     $entity->setNome("Rastreador teste");
     $entity->setDataHora(date('Y-m-d H-i-s'));
     $coordenada = new Coordenada();
@@ -38,12 +36,12 @@ function testeUpdate() {
 }
 
 function testeReadById() {
-    echo "Resultado: " . ServiceLocator::getRastreadorService()->readById(10);
+    echo "Resultado: " . ServiceLocator::getRastreadorService()->readById(2);
 }
 
 function testeReadByCriteria() {
     $criteria = array();
-//    $criteria[RastreadorCriteria::DATA_HORA_LK] = date('Y-m-d');
+    $criteria[RastreadorCriteria::DATA_HORA_LK] = date('Y-m-d');
     $entityArray = ServiceLocator::getRastreadorService()->readByCriteria($criteria);
     foreach ($entityArray as $entity) {
         echo $entity . "<br>";

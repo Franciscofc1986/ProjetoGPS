@@ -2,15 +2,33 @@
 
 include_once realpath(__DIR__) . '/../../../model/service/ConnectionManager.php';
 include_once realpath(__DIR__) . '/../../../model/entity/Coordenada.php';
+include_once realpath(__DIR__) . '/../../../model/entity/Rastreador.php';
 include_once realpath(__DIR__) . '/../../../model/dao/CoordenadaDAO.php';
 
+// TESTE CREATE
 //$coordenada = new Coordenada();
-//$coordenada->setLatitude(123);
-//$coordenada->setLongitude(321);
+//$coordenada->setLatitude(-25.666);
+//$coordenada->setLongitude(-25.666);
 //$coordenada->setDataHora(date('Y-m-d H-i-s'));
-//$coordenada->setRastreador(2);
+//$rastreador = new Rastreador();
+//$rastreador->setId(8);
+//$coordenada->setRastreador($rastreador);
 //echo testeCreate($coordenada);
-
+// TESTE DELETE
+//echo testeDelete(3);
+// TESTE UPDATE
+//$coordenada = new Coordenada();
+//$coordenada->setId(6);
+//$coordenada->setLatitude(-28);
+//$coordenada->setLongitude(-28);
+//$coordenada->setDataHora(date('Y-m-d H-i-s'));
+//$rastreador = new Rastreador();
+//$rastreador->setId(8);
+//$coordenada->setRastreador($rastreador);
+//echo testeUpdate($coordenada);
+// TESTE READ BY ID
+//echo testeReadById(7);
+// TESTE READ BY CRITERIA
 //$criteria = array();
 //$criteria[CoordenadaCriteria::DATA_HORA_LK] = date('Y-m-d');
 //$entityArray = testeReadByCriteria($criteria);
@@ -21,6 +39,7 @@ include_once realpath(__DIR__) . '/../../../model/dao/CoordenadaDAO.php';
 function testeCreate($entity) {
     $resultado = false;
     $conexao = ConnectionManager::getConexao();
+    $conexao->beginTransaction();
     $dao = new CoordenadaDAO();
     if (!$dao->create($conexao, $entity)) {
         $conexao->rollback();
@@ -28,13 +47,14 @@ function testeCreate($entity) {
         $conexao->commit();
         $resultado = true;
     }
-    $conexao->close();
+    $conexao = null;
     return $resultado;
 }
 
 function testeDelete($id) {
     $resultado = false;
     $conexao = ConnectionManager::getConexao();
+    $conexao->beginTransaction();
     $dao = new CoordenadaDAO();
     if (!$dao->delete($conexao, $id)) {
         $conexao->rollback();
@@ -42,13 +62,14 @@ function testeDelete($id) {
         $conexao->commit();
         $resultado = true;
     }
-    $conexao->close();
+    $conexao = null;
     return $resultado;
 }
 
 function testeUpdate($entity) {
     $resultado = false;
     $conexao = ConnectionManager::getConexao();
+    $conexao->beginTransaction();
     $dao = new CoordenadaDAO();
     if (!$dao->update($conexao, $entity)) {
         $conexao->rollback();
@@ -56,12 +77,13 @@ function testeUpdate($entity) {
         $conexao->commit();
         $resultado = true;
     }
-    $conexao->close();
+    $conexao = null;
     return $resultado;
 }
 
 function testeReadById($id) {
     $conexao = ConnectionManager::getConexao();
+    $conexao->beginTransaction();
     $dao = new CoordenadaDAO();
     $entity = $dao->readById($conexao, $id);
     if ($entity == null) {
@@ -69,12 +91,13 @@ function testeReadById($id) {
     } else {
         $conexao->commit();
     }
-    $conexao->close();
+    $conexao = null;
     return $entity;
 }
 
 function testeReadByCriteria($criteria) {
     $conexao = ConnectionManager::getConexao();
+    $conexao->beginTransaction();
     $dao = new CoordenadaDAO();
     $entityArray = $dao->readByCriteria($conexao, $criteria);
     if ($entityArray == null) {
@@ -82,5 +105,6 @@ function testeReadByCriteria($criteria) {
     } else {
         $conexao->commit();
     }
+    $conexao = null;
     return $entityArray;
 }

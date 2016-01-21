@@ -9,8 +9,8 @@ testeReadByCriteria();
 
 function testeCreate() {
     $entity = new Coordenada();
-    $entity->setLatitude(-22.002);
-    $entity->setLongitude(-23.002);
+    $entity->setLatitude(-12);
+    $entity->setLongitude(-12);
     $entity->setDataHora(date('Y-m-d H-i-s'));
 
     $rastreador = new Rastreador();
@@ -27,8 +27,8 @@ function testeDelete() {
 function testeUpdate() {
     $entity = new Coordenada();
     $entity->setId(15);
-    $entity->setLatitude(30);
-    $entity->setLongitude(30);
+    $entity->setLatitude(25);
+    $entity->setLongitude(25);
     $entity->setDataHora(date('Y-m-d H-i-s'));
 
     $rastreador = new Rastreador();

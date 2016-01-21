@@ -5,8 +5,6 @@ include_once realpath(__DIR__) . '/../../../model/dao/criteria/UsuarioCriteria.p
 include_once realpath(__DIR__) . '/../../../model/service/UsuarioService.php';
 include_once realpath(__DIR__) . '/../../../model/service/ServiceLocator.php';
 
-testeReadByCriteria();
-
 function testeCreate() {
     $entity = new Usuario();
     $entity->setLogin("UsuarioTeste");
@@ -17,12 +15,12 @@ function testeCreate() {
 }
 
 function testeDelete() {
-    echo "Resultado: " . ServiceLocator::getUsuarioService()->delete(2);
+    echo "Resultado: " . ServiceLocator::getUsuarioService()->delete(21);
 }
 
 function testeUpdate() {
     $entity = new Usuario();
-    $entity->setId(3);
+    $entity->setId(6);
     $entity->setLogin("UsuarioTeste");
     $entity->setSenha("senhaTeste");
     $entity->setNome("Usuario Teste");
@@ -37,7 +35,7 @@ function testeReadById() {
 function testeReadByCriteria() {
     $criteria = array();
     $criteria[UsuarioCriteria::NOME_LK] = "B";
-    $criteria[UsuarioCriteria::SENHA_EQ] = "1111";
+//    $criteria[UsuarioCriteria::SENHA_EQ] = "1111";
     $entityArray = ServiceLocator::getUsuarioService()->readByCriteria($criteria);
     foreach ($entityArray as $entity) {
         echo $entity . "<br>";

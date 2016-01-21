@@ -12,6 +12,7 @@ class CoordenadaService {
         $resultado = false;
         try {
             $conexao = ConnectionManager::getConexao();
+            $conexao->beginTransaction();
             $coordenadaDAO = new CoordenadaDAO();
             if ($coordenadaDAO->create($conexao, $coordenada)) {
                 $rastreadorDAO = new RastreadorDAO();
@@ -26,7 +27,7 @@ class CoordenadaService {
             $conexao->rollback();
             echo $ex->getMessage();
         } finally {
-            $conexao->close();
+            $conexao = null;
         }
         return $resultado;
     }
@@ -35,6 +36,7 @@ class CoordenadaService {
         $resultado = false;
         try {
             $conexao = ConnectionManager::getConexao();
+            $conexao->beginTransaction();
             $dao = new CoordenadaDAO();
             $resultado = $dao->delete($conexao, $id);
             $conexao->commit();
@@ -42,7 +44,7 @@ class CoordenadaService {
             $conexao->rollback();
             echo $ex->getMessage();
         } finally {
-            $conexao->close();
+            $conexao = null;
         }
         return $resultado;
     }
@@ -51,6 +53,7 @@ class CoordenadaService {
         $entityArray = null;
         try {
             $conexao = ConnectionManager::getConexao();
+            $conexao->beginTransaction();
             $dao = new CoordenadaDAO();
             $entityArray = $dao->readByCriteria($conexao, $criteria, $offset, $limit);
             $conexao->commit();
@@ -58,7 +61,7 @@ class CoordenadaService {
             $conexao->rollback();
             echo $ex->getMessage();
         } finally {
-            $conexao->close();
+            $conexao = null;
         }
         return $entityArray;
     }
@@ -67,6 +70,7 @@ class CoordenadaService {
         $entity = null;
         try {
             $conexao = ConnectionManager::getConexao();
+            $conexao->beginTransaction();
             $dao = new CoordenadaDAO();
             $entity = $dao->readById($conexao, $id);
             $conexao->commit();
@@ -74,7 +78,7 @@ class CoordenadaService {
             $conexao->rollback();
             echo $ex->getMessage();
         } finally {
-            $conexao->close();
+            $conexao = null;
         }
         return $entity;
     }
@@ -83,6 +87,7 @@ class CoordenadaService {
         $resultado = false;
         try {
             $conexao = ConnectionManager::getConexao();
+            $conexao->beginTransaction();
             $dao = new CoordenadaDAO();
             $resultado = $dao->update($conexao, $entity);
             $conexao->commit();
@@ -90,7 +95,7 @@ class CoordenadaService {
             $conexao->rollback();
             echo $ex->getMessage();
         } finally {
-            $conexao->close();
+            $conexao = null;
         }
         return $resultado;
     }

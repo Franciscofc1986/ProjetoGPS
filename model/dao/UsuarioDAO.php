@@ -5,36 +5,44 @@ include_once realpath(__DIR__) . '/../../model/dao/criteria/UsuarioCriteria.php'
 
 class UsuarioDAO {
 
-    public function create(mysqli $conexao, Usuario $entity) {
+    public function create(PDO $conexao, Usuario $entity) {
         $resultado = false;
         if ($conexao != null && $entity != null) {
-            $sql = "insert into usuario (login, senha, nome, data_hora) values (?, ?, ?, ?)";
-            $stmt = $conexao->stmt_init();
-            if ($stmt->prepare($sql)) {
-                $stmt->bind_param("ssss", $entity->getLogin(), $entity->getSenha(), $entity->getNome(), $entity->getDataHora());
-                $resultado = $stmt->execute();
-                $entity->setId($stmt->insert_id);
+            try {
+                $i = 0;
+                $sql = "insert into usuario (login, senha, nome, data_hora) values (?, ?, ?, ?)";
+                $ps = $conexao->prepare($sql);
+                $ps->bindParam(++$i, $entity->getLogin(), PDO::PARAM_STR);
+                $ps->bindParam(++$i, $entity->getSenha(), PDO::PARAM_STR);
+                $ps->bindParam(++$i, $entity->getNome(), PDO::PARAM_STR);
+                $ps->bindParam(++$i, $entity->getDataHora(), PDO::PARAM_STR);
+                $resultado = $ps->execute();
+                $entity->setId($conexao->lastInsertId());
+                $ps = null;
+            } catch (PDOException $e) {
+                throw $e;
             }
-            $stmt->close();
         }
         return $resultado;
     }
 
-    public function delete(mysqli $conexao, $id) {
+    public function delete(PDO $conexao, $id) {
         $resultado = false;
         if ($conexao != null && $id > 0) {
-            $sql = "delete from usuario where id = ?";
-            $stmt = $conexao->stmt_init();
-            if ($stmt->prepare($sql)) {
-                $stmt->bind_param("i", $id);
-                $resultado = $stmt->execute();
+            try {
+                $sql = "delete from usuario where id = ?";
+                $ps = $conexao->prepare($sql);
+                $ps->bindParam(1, $id, PDO::PARAM_INT);
+                $resultado = $ps->execute();
+                $ps = null;
+            } catch (PDOException $e) {
+                throw $e;
             }
-            $stmt->close();
         }
         return $resultado;
     }
 
-    public function readByCriteria(mysqli $conexao, $criteria = NULL, $offset = -1, $limit = -1) {
+    public function readByCriteria(PDO $conexao, $criteria = NULL, $offset = -1, $limit = -1) {
         $entityArray = array();
         if ($conexao != null) {
 
@@ -80,11 +88,10 @@ class UsuarioDAO {
                 $sql .= " offset $offset";
             }
 
-            $stmt = $conexao->stmt_init();
-            if ($stmt->prepare($sql)) {
-                $stmt->execute();
-                $result = $stmt->get_result();
-                while ($linha = $result->fetch_array(MYSQLI_ASSOC)) {
+            try {
+                $ps = $conexao->prepare($sql);
+                $ps->execute();
+                while ($linha = $ps->fetch(PDO::FETCH_ASSOC)) {
                     $entity = new Usuario();
                     $entity->setId($linha['id']);
                     $entity->setLogin($linha['login']);
@@ -93,24 +100,23 @@ class UsuarioDAO {
                     $entity->setDataHora($linha['data_hora']);
                     $entityArray[] = $entity;
                 }
+                $ps = null;
+            } catch (PDOException $e) {
+                throw $e;
             }
-            $stmt->close();
         }
         return $entityArray;
     }
 
-    public function readById(mysqli $conexao, $id) {
+    public function readById(PDO $conexao, $id) {
         $entity = null;
         if ($conexao != null && $id > 0) {
-            $sql = "select * from usuario where id = ?";
-            $stmt = $conexao->stmt_init();
-            if ($stmt->prepare($sql)) {
-                $stmt->bind_param("i", $id);
-                $stmt->execute();
-
-                $result = $stmt->get_result();
-                if ($linha = $result->fetch_array(MYSQLI_ASSOC)) {
-
+            try {
+                $sql = "select * from usuario where id = ?";
+                $ps = $conexao->prepare($sql);
+                $ps->bindParam(1, $id, PDO::PARAM_INT);
+                $ps->execute();
+                if ($linha = $ps->fetch(PDO::FETCH_ASSOC)) {
                     $entity = new Usuario();
                     $entity->setId($linha['id']);
                     $entity->setLogin($linha['login']);
@@ -118,22 +124,31 @@ class UsuarioDAO {
                     $entity->setNome($linha['nome']);
                     $entity->setDataHora($linha['data_hora']);
                 }
+                $ps = null;
+            } catch (PDOException $e) {
+                throw $e;
             }
-            $stmt->close();
         }
         return $entity;
     }
 
-    public function update(mysqli $conexao, Usuario $entity) {
+    public function update(PDO $conexao, Usuario $entity) {
         $resultado = false;
         if ($conexao != null && $entity != null) {
-            $sql = "update usuario set login = ?, senha = ?, nome = ?, data_hora = ? where id = ?";
-            $stmt = $conexao->stmt_init();
-            if ($stmt->prepare($sql)) {
-                $stmt->bind_param("ssssi", $entity->getLogin(), $entity->getSenha(), $entity->getNome(), $entity->getDataHora(), $entity->getId());
-                $resultado = $stmt->execute();
+            try {
+                $i = 0;
+                $sql = "update usuario set login = ?, senha = ?, nome = ?, data_hora = ? where id = ?";
+                $ps = $conexao->prepare($sql);
+                $ps->bindParam(++$i, $entity->getLogin(), PDO::PARAM_STR);
+                $ps->bindParam(++$i, $entity->getSenha(), PDO::PARAM_STR);
+                $ps->bindParam(++$i, $entity->getNome(), PDO::PARAM_STR);
+                $ps->bindParam(++$i, $entity->getDataHora(), PDO::PARAM_STR);
+                $ps->bindParam(++$i, $entity->getId(), PDO::PARAM_INT);
+                $resultado = $ps->execute();
+                $ps = null;
+            } catch (PDOException $e) {
+                throw $e;
             }
-            $stmt->close();
         }
         return $resultado;
     }
