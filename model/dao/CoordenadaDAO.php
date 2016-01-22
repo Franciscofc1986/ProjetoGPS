@@ -5,9 +5,9 @@ include_once realpath(__DIR__) . '/../../model/dao/criteria/CoordenadaCriteria.p
 
 class CoordenadaDAO {
 
-    public function create(PDO $conexao, Coordenada $entity) {
+    public function create(PDO $conexao, $entity) {
         $resultado = false;
-        if ($conexao != null && $entity != null) {
+        if ($conexao != null && is_a($entity, 'Coordenada')) {
             try {
                 $i = 0;
                 $sql = "insert into coordenada (latitude, longitude, data_hora, rastreador_fk) values (?, ?, ?, ?)";
@@ -125,9 +125,9 @@ class CoordenadaDAO {
         return $entity;
     }
 
-    public function update(PDO $conexao, Coordenada $entity) {
+    public function update(PDO $conexao, $entity) {
         $resultado = false;
-        if ($conexao != null && $entity != null) {
+        if ($conexao != null && is_a($entity, 'Coordenada')) {
             try {
                 $i = 0;
                 $sql = "update coordenada set latitude = ?, longitude = ?, data_hora = ?, rastreador_fk = ? where id = ?";

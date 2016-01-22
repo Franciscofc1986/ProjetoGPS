@@ -19,7 +19,7 @@ class ConnectionManager {
             $conexao->setAttribute(PDO::ATTR_AUTOCOMMIT, false);
             $conexao->setAttribute(PDO::ATTR_TIMEOUT, 20);
         } catch (PDOException $e) {
-            echo 'Falha na Conexão: ' . $e->getMessage();
+            throw $e;
         }
         return $conexao;
     }

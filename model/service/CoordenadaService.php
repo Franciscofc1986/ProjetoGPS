@@ -8,7 +8,7 @@ include_once realpath(__DIR__) . '/../../model/service/ConnectionManager.php';
 
 class CoordenadaService {
 
-    public function create(Coordenada $coordenada) {
+    public function create($coordenada) {
         $resultado = false;
         try {
             $conexao = ConnectionManager::getConexao();
@@ -76,7 +76,7 @@ class CoordenadaService {
         return $entity;
     }
 
-    public function update(Coordenada $entity) {
+    public function update($entity) {
         $resultado = false;
         try {
             $conexao = ConnectionManager::getConexao();

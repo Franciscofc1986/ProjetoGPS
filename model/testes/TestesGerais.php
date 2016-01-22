@@ -17,8 +17,6 @@ include_once realpath(__DIR__) . '/../../model/service/ConnectionManager.php';
 //    echo "$coordenada<br>";
 //}
 
-inserirCoordenada();
-
 function obterCoordenadasDeRastreador($serial) {
     $criteria = array();
     $criteria[RastreadorCriteria::ID_EQ] = 4;

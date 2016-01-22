@@ -5,18 +5,18 @@ include_once realpath(__DIR__) . '/../../model/dao/criteria/RastreadorCriteria.p
 
 class RastreadorDAO {
 
-    public function create(PDO $conexao, Rastreador $entity) {
+    public function create(PDO $conexao, $entity) {
         $resultado = false;
-        if ($conexao != null && $entity != null) {
+        if ($conexao != null && is_a($entity, 'Rastreador')) {
             try {
                 $i = 0;
                 $sql = "insert into rastreador (serial, nome, data_hora, ultima_coordenada_fk) values (?, ?, ?, ?)";
                 $ps = $conexao->prepare($sql);
-                $ps->bindParam(++$i, $entity->getSerial(), PDO::PARAM_STR);
-                $ps->bindParam(++$i, $entity->getNome(), PDO::PARAM_STR);
-                $ps->bindParam(++$i, $entity->getDataHora(), PDO::PARAM_STR);
+                $ps->bindParam( ++$i, $entity->getSerial(), PDO::PARAM_STR);
+                $ps->bindParam( ++$i, $entity->getNome(), PDO::PARAM_STR);
+                $ps->bindParam( ++$i, $entity->getDataHora(), PDO::PARAM_STR);
                 $ultimaCoordenadaFk = ($entity->getUltimaCoordenada() != null) ? $entity->getUltimaCoordenada()->getId() : NULL;
-                $ps->bindParam(++$i, $ultimaCoordenadaFk, PDO::PARAM_INT);
+                $ps->bindParam( ++$i, $ultimaCoordenadaFk, PDO::PARAM_INT);
                 $resultado = $ps->execute();
                 $entity->setId($conexao->lastInsertId());
                 $ps = null;
@@ -151,19 +151,19 @@ class RastreadorDAO {
         return $rastreador;
     }
 
-    public function update(PDO $conexao, Rastreador $entity) {
+    public function update(PDO $conexao, $entity) {
         $resultado = false;
-        if ($conexao != null && $entity != null) {
+        if ($conexao != null && is_a($entity, 'Rastreador')) {
             try {
                 $i = 0;
                 $sql = "update rastreador set serial = ?, nome = ?, data_hora = ?, ultima_coordenada_fk = ? where id = ?";
                 $ps = $conexao->prepare($sql);
-                $ps->bindParam(++$i, $entity->getSerial(), PDO::PARAM_STR);
-                $ps->bindParam(++$i, $entity->getNome(), PDO::PARAM_STR);
-                $ps->bindParam(++$i, $entity->getDataHora(), PDO::PARAM_STR);
+                $ps->bindParam( ++$i, $entity->getSerial(), PDO::PARAM_STR);
+                $ps->bindParam( ++$i, $entity->getNome(), PDO::PARAM_STR);
+                $ps->bindParam( ++$i, $entity->getDataHora(), PDO::PARAM_STR);
                 $ultimaCoordenadaFk = ($entity->getUltimaCoordenada() != null) ? $entity->getUltimaCoordenada()->getId() : NULL;
-                $ps->bindParam(++$i, $ultimaCoordenadaFk, PDO::PARAM_INT);
-                $ps->bindParam(++$i, $entity->getId(), PDO::PARAM_INT);
+                $ps->bindParam( ++$i, $ultimaCoordenadaFk, PDO::PARAM_INT);
+                $ps->bindParam( ++$i, $entity->getId(), PDO::PARAM_INT);
                 $resultado = $ps->execute();
                 $ps = null;
             } catch (PDOException $e) {
