@@ -15,6 +15,20 @@ include_once realpath(__DIR__) . '/../../../model/dao/CoordenadaDAO.php';
 //$rastreador->setId(8);
 //$coordenada->setRastreador($rastreador);
 //echo testeCreate($coordenada);
+// TESTE CREATE ARRAY
+//$coordenadaArray = array();
+//for ($i = 0; $i < 1000; $i++) {
+//    $coordenada = new Coordenada();
+//    $coordenada->setLatitude(rand(-20.000, -25.000));
+//    $coordenada->setLongitude(rand(-20.000, -25.000));
+//    $coordenada->setDataHora(date('Y-m-d H-i-s'));
+//    $coordenada->setHdop(rand(0.000, 3.000));
+//    $aux = new Rastreador();
+//    $aux->setId(rand(1, 10));
+//    $coordenada->setRastreador($aux);
+//    $coordenadaArray[] = $coordenada;
+//}
+//echo testeCreate($coordenadaArray);
 // TESTE DELETE
 //echo testeDelete(11);
 // TESTE UPDATE

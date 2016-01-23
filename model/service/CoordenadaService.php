@@ -14,7 +14,11 @@ class CoordenadaService {
             $conexao = ConnectionManager::getConexao();
             $conexao->beginTransaction();
             $coordenadaDAO = new CoordenadaDAO();
-            $resultado = $coordenadaDAO->create($conexao, $coordenada);
+            if (is_a($coordenada, 'Coordenada')) {
+                $resultado = $coordenadaDAO->create($conexao, $coordenada);
+            } else if (is_array($coordenada)) {
+                $resultado = $coordenadaDAO->createArray($conexao, $coordenada);
+            }
             $conexao->commit();
         } catch (Exception $ex) {
             $conexao->rollback();

@@ -8,8 +8,8 @@ class Rastreador extends BaseEntity {
     protected $serial;
     protected $nome;
     protected $publico;
-    protected $ultimaCoordenada;
     protected $usuarioArray;
+    protected $ultimaCoordenada;
     protected $coordenadaArray;
 
     public function __construct() {
@@ -33,12 +33,12 @@ class Rastreador extends BaseEntity {
         return $this->publico;
     }
 
-    public function getUltimaCoordenada() {
-        return $this->ultimaCoordenada;
-    }
-
     public function getUsuarioArray() {
         return $this->usuarioArray;
+    }
+    
+    public function getUltimaCoordenada() {
+        return $this->ultimaCoordenada;
     }
 
     public function getCoordenadaArray() {
@@ -57,14 +57,14 @@ class Rastreador extends BaseEntity {
         $this->publico = $publico;
     }
 
-    public function setUltimaCoordenada(Coordenada $ultimaCoordenada) {
-        $this->ultimaCoordenada = $ultimaCoordenada;
-    }
-
     public function setUsuarioArray($usuarioArray) {
         $this->usuarioArray = $usuarioArray;
     }
 
+    public function setUltimaCoordenada(Coordenada $ultimaCoordenada) {
+        $this->ultimaCoordenada = $ultimaCoordenada;
+    }
+    
     public function setCoordenadaArray($coordenadaArray) {
         $this->coordenadaArray = $coordenadaArray;
     }

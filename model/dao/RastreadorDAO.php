@@ -12,9 +12,9 @@ class RastreadorDAO {
                 $i = 0;
                 $sql = "insert into rastreador (serial, nome, publico) values (?, ?, ?)";
                 $ps = $conexao->prepare($sql);
-                $ps->bindParam(++$i, $entity->getSerial(), PDO::PARAM_STR);
-                $ps->bindParam(++$i, $entity->getNome(), PDO::PARAM_STR);
-                $ps->bindParam(++$i, $entity->isPublico(), PDO::PARAM_BOOL);
+                $ps->bindParam( ++$i, $entity->getSerial(), PDO::PARAM_STR);
+                $ps->bindParam( ++$i, $entity->getNome(), PDO::PARAM_STR);
+                $ps->bindParam( ++$i, $entity->isPublico(), PDO::PARAM_BOOL);
                 $resultado = $ps->execute();
                 $entity->setId($conexao->lastInsertId());
                 $ps = null;
@@ -137,10 +137,10 @@ class RastreadorDAO {
                 $i = 0;
                 $sql = "update rastreador set serial = ?, nome = ?, publico = ? where id = ?";
                 $ps = $conexao->prepare($sql);
-                $ps->bindParam(++$i, $entity->getSerial(), PDO::PARAM_STR);
-                $ps->bindParam(++$i, $entity->getNome(), PDO::PARAM_STR);
-                $ps->bindParam(++$i, $entity->isPublico(), PDO::PARAM_BOOL);
-                $ps->bindParam(++$i, $entity->getId(), PDO::PARAM_INT);
+                $ps->bindParam( ++$i, $entity->getSerial(), PDO::PARAM_STR);
+                $ps->bindParam( ++$i, $entity->getNome(), PDO::PARAM_STR);
+                $ps->bindParam( ++$i, $entity->isPublico(), PDO::PARAM_BOOL);
+                $ps->bindParam( ++$i, $entity->getId(), PDO::PARAM_INT);
                 $resultado = $ps->execute();
                 $ps = null;
             } catch (PDOException $e) {

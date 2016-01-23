@@ -28,6 +28,35 @@ class CoordenadaDAO {
         return $resultado;
     }
 
+    public function createArray(PDO $conexao, $entityArray) {
+        $resultado = false;
+        if ($conexao != null && count($entityArray) > 0) {
+            try {
+                $parametros = "";
+                $valores = array();
+                foreach ($entityArray as $valor) {
+                    $parametros .= "(?,?,?,?,?), ";
+                    $valores[] = $valor->getLatitude();
+                    $valores[] = $valor->getLongitude();
+                    $valores[] = $valor->getDataHora();
+                    $valores[] = $valor->getHdop();
+                    $rastreadorFk = ($valor->getRastreador() != null) ? $valor->getRastreador()->getId() : NULL;
+                    $valores[] = $rastreadorFk;
+                }
+                $parametros = rtrim($parametros, ', ');
+
+                $sql = "insert into coordenada (latitude, longitude, data_hora, hdop, rastreador_fk) values " . $parametros;
+                $ps = $conexao->prepare($sql);
+
+                $resultado = $ps->execute($valores);
+                $ps = null;
+            } catch (PDOException $e) {
+                throw $e;
+            }
+        }
+        return $resultado;
+    }
+
     public function delete(PDO $conexao, $id) {
         $resultado = false;
         if ($conexao != null && $id > 0) {
