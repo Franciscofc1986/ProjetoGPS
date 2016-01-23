@@ -42,7 +42,7 @@ class CoordenadaService {
         return $resultado;
     }
 
-    public function readByCriteria($criteria = NULL, $offset = -1, $limit = -1) {
+    public function readByCriteria($criteria = null, $offset = -1, $limit = -1) {
         $entityArray = null;
         try {
             $conexao = ConnectionManager::getConexao();

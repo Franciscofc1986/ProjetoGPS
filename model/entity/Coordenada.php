@@ -7,6 +7,7 @@ class Coordenada extends BaseEntity {
 
     protected $latitude;
     protected $longitude;
+    protected $hdop;
     protected $dataHora;
     protected $rastreador;
 
@@ -23,6 +24,10 @@ class Coordenada extends BaseEntity {
         return $this->longitude;
     }
 
+    public function getHdop() {
+        return $this->hdop;
+    }
+
     public function getDataHora() {
         return $this->dataHora;
     }
@@ -37,6 +42,10 @@ class Coordenada extends BaseEntity {
 
     public function setLongitude($longitude) {
         $this->longitude = $longitude;
+    }
+
+    public function setHdop($hdop) {
+        $this->hdop = $hdop;
     }
 
     public function setDataHora($dataHora) {

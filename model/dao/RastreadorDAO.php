@@ -10,13 +10,11 @@ class RastreadorDAO {
         if ($conexao != null && is_a($entity, 'Rastreador')) {
             try {
                 $i = 0;
-                $sql = "insert into rastreador (serial, nome, data_hora, ultima_coordenada_fk) values (?, ?, ?, ?)";
+                $sql = "insert into rastreador (serial, nome, publico) values (?, ?, ?)";
                 $ps = $conexao->prepare($sql);
-                $ps->bindParam( ++$i, $entity->getSerial(), PDO::PARAM_STR);
-                $ps->bindParam( ++$i, $entity->getNome(), PDO::PARAM_STR);
-                $ps->bindParam( ++$i, $entity->getDataHora(), PDO::PARAM_STR);
-                $ultimaCoordenadaFk = ($entity->getUltimaCoordenada() != null) ? $entity->getUltimaCoordenada()->getId() : NULL;
-                $ps->bindParam( ++$i, $ultimaCoordenadaFk, PDO::PARAM_INT);
+                $ps->bindParam(++$i, $entity->getSerial(), PDO::PARAM_STR);
+                $ps->bindParam(++$i, $entity->getNome(), PDO::PARAM_STR);
+                $ps->bindParam(++$i, $entity->isPublico(), PDO::PARAM_BOOL);
                 $resultado = $ps->execute();
                 $entity->setId($conexao->lastInsertId());
                 $ps = null;
@@ -47,9 +45,7 @@ class RastreadorDAO {
         $rastreadorArray = array();
         if ($conexao != null) {
 
-            $sql = "select r.id as 'id_r', r.serial, r.nome, r.data_hora as 'data_hora_r', "
-                    . "c.id as 'id_c', c.latitude, c.longitude, c.data_hora as 'data_hora_c' "
-                    . "from (select * from rastreador where 1=1";
+            $sql = "select * from rastreador where 1=1";
 
             if (is_array($criteria) && count($criteria) > 0) {
                 if (array_key_exists(RastreadorCriteria::ID_EQ, $criteria)) {
@@ -76,14 +72,14 @@ class RastreadorDAO {
                         $sql .= " and lower(nome) like lower('%$aux%')";
                     }
                 }
-                if (array_key_exists(RastreadorCriteria::DATA_HORA_LK, $criteria)) {
-                    $aux = $criteria[RastreadorCriteria::DATA_HORA_LK];
-                    if ($aux != null && strlen($aux) > 0) {
-                        $sql .= " and lower(data_hora) like lower('%$aux%')";
+                if (array_key_exists(RastreadorCriteria::PUBLICO_EQ, $criteria)) {
+                    $aux = $criteria[RastreadorCriteria::PUBLICO_EQ];
+                    if ($aux !== null) {
+                        $aux = $aux == false ? 0 : 1;
+                        $sql .= " and publico = $aux";
                     }
                 }
             }
-            $sql .= ") as r left join (coordenada c) on (r.ultima_coordenada_fk = c.id)";
 
             if ($limit > 0) {
                 $sql .= " limit $limit";
@@ -97,17 +93,10 @@ class RastreadorDAO {
                 $ps->execute();
                 while ($linha = $ps->fetch(PDO::FETCH_ASSOC)) {
                     $rastreador = new Rastreador();
-                    $rastreador->setId($linha['id_r']);
+                    $rastreador->setId($linha['id']);
                     $rastreador->setSerial($linha['serial']);
                     $rastreador->setNome($linha['nome']);
-                    $rastreador->setDataHora($linha['data_hora_r']);
-                    $ultimaCoordenada = new Coordenada();
-                    $ultimaCoordenada->setId($linha['id_c']);
-                    $ultimaCoordenada->setLatitude($linha['latitude']);
-                    $ultimaCoordenada->setLongitude($linha['longitude']);
-                    $ultimaCoordenada->setDataHora($linha['data_hora_c']);
-                    $ultimaCoordenada->setRastreador($rastreador);
-                    $rastreador->setUltimaCoordenada($ultimaCoordenada);
+                    $rastreador->setPublico($linha['publico']);
                     $rastreadorArray[] = $rastreador;
                 }
                 $ps = null;
@@ -122,26 +111,16 @@ class RastreadorDAO {
         $rastreador = null;
         if ($conexao != null && $id > 0) {
             try {
-                $sql = "select r.id as 'id_r', r.serial, r.nome, r.data_hora as 'data_hora_r', "
-                        . "c.id as 'id_c', c.latitude, c.longitude, c.data_hora as 'data_hora_c' "
-                        . "from (select * from rastreador where id = ?) as r "
-                        . "left join (coordenada c) on (r.ultima_coordenada_fk = c.id)";
+                $sql = "select * from rastreador where id = ?";
                 $ps = $conexao->prepare($sql);
                 $ps->bindParam(1, $id, PDO::PARAM_INT);
                 $ps->execute();
                 if ($linha = $ps->fetch(PDO::FETCH_ASSOC)) {
                     $rastreador = new Rastreador();
-                    $rastreador->setId($linha['id_r']);
+                    $rastreador->setId($linha['id']);
                     $rastreador->setSerial($linha['serial']);
                     $rastreador->setNome($linha['nome']);
-                    $rastreador->setDataHora($linha['data_hora_r']);
-                    $ultimaCoordenada = new Coordenada();
-                    $ultimaCoordenada->setId($linha['id_c']);
-                    $ultimaCoordenada->setLatitude($linha['latitude']);
-                    $ultimaCoordenada->setLongitude($linha['longitude']);
-                    $ultimaCoordenada->setDataHora($linha['data_hora_c']);
-                    $ultimaCoordenada->setRastreador($rastreador);
-                    $rastreador->setUltimaCoordenada($ultimaCoordenada);
+                    $rastreador->setPublico($linha['publico']);
                 }
                 $ps = null;
             } catch (PDOException $e) {
@@ -156,14 +135,12 @@ class RastreadorDAO {
         if ($conexao != null && is_a($entity, 'Rastreador')) {
             try {
                 $i = 0;
-                $sql = "update rastreador set serial = ?, nome = ?, data_hora = ?, ultima_coordenada_fk = ? where id = ?";
+                $sql = "update rastreador set serial = ?, nome = ?, publico = ? where id = ?";
                 $ps = $conexao->prepare($sql);
-                $ps->bindParam( ++$i, $entity->getSerial(), PDO::PARAM_STR);
-                $ps->bindParam( ++$i, $entity->getNome(), PDO::PARAM_STR);
-                $ps->bindParam( ++$i, $entity->getDataHora(), PDO::PARAM_STR);
-                $ultimaCoordenadaFk = ($entity->getUltimaCoordenada() != null) ? $entity->getUltimaCoordenada()->getId() : NULL;
-                $ps->bindParam( ++$i, $ultimaCoordenadaFk, PDO::PARAM_INT);
-                $ps->bindParam( ++$i, $entity->getId(), PDO::PARAM_INT);
+                $ps->bindParam(++$i, $entity->getSerial(), PDO::PARAM_STR);
+                $ps->bindParam(++$i, $entity->getNome(), PDO::PARAM_STR);
+                $ps->bindParam(++$i, $entity->isPublico(), PDO::PARAM_BOOL);
+                $ps->bindParam(++$i, $entity->getId(), PDO::PARAM_INT);
                 $resultado = $ps->execute();
                 $ps = null;
             } catch (PDOException $e) {

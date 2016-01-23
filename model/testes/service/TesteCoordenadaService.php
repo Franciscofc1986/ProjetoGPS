@@ -12,6 +12,7 @@ function testeCreate() {
     $entity->setLatitude(-12);
     $entity->setLongitude(-12);
     $entity->setDataHora(date('Y-m-d H-i-s'));
+    $entity->setHdop(0.5266);
 
     $rastreador = new Rastreador();
     $rastreador->setId(3);
@@ -30,6 +31,7 @@ function testeUpdate() {
     $entity->setLatitude(25);
     $entity->setLongitude(25);
     $entity->setDataHora(date('Y-m-d H-i-s'));
+    $entity->setHdop(1.655);
 
     $rastreador = new Rastreador();
     $rastreador->setId(3);

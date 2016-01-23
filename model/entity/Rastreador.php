@@ -7,13 +7,18 @@ class Rastreador extends BaseEntity {
 
     protected $serial;
     protected $nome;
-    protected $dataHora;
+    protected $publico;
     protected $ultimaCoordenada;
     protected $usuarioArray;
     protected $coordenadaArray;
 
+    public function __construct() {
+        $this->usuarioArray = array();
+        $this->coordenadaArray = array();
+    }
+
     public function __toString() {
-        return "$this->id# $this->serial# $this->nome# $this->dataHora# $this->ultimaCoordenada";
+        return "$this->id# $this->serial# $this->nome# $this->publico# $this->ultimaCoordenada";
     }
 
     public function getSerial() {
@@ -24,8 +29,8 @@ class Rastreador extends BaseEntity {
         return $this->nome;
     }
 
-    public function getDataHora() {
-        return $this->dataHora;
+    public function isPublico() {
+        return $this->publico;
     }
 
     public function getUltimaCoordenada() {
@@ -48,8 +53,8 @@ class Rastreador extends BaseEntity {
         $this->nome = $nome;
     }
 
-    public function setDataHora($dataHora) {
-        $this->dataHora = $dataHora;
+    public function setPublico($publico) {
+        $this->publico = $publico;
     }
 
     public function setUltimaCoordenada(Coordenada $ultimaCoordenada) {

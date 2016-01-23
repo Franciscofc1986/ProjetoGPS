@@ -10,12 +10,11 @@ class UsuarioDAO {
         if ($conexao != null && is_a($entity, 'Usuario')) {
             try {
                 $i = 0;
-                $sql = "insert into usuario (login, senha, nome, data_hora) values (?, ?, ?, ?)";
+                $sql = "insert into usuario (login, senha, nome) values (?, ?, ?)";
                 $ps = $conexao->prepare($sql);
-                $ps->bindParam( ++$i, $entity->getLogin(), PDO::PARAM_STR);
-                $ps->bindParam( ++$i, $entity->getSenha(), PDO::PARAM_STR);
-                $ps->bindParam( ++$i, $entity->getNome(), PDO::PARAM_STR);
-                $ps->bindParam( ++$i, $entity->getDataHora(), PDO::PARAM_STR);
+                $ps->bindParam(++$i, $entity->getLogin(), PDO::PARAM_STR);
+                $ps->bindParam(++$i, $entity->getSenha(), PDO::PARAM_STR);
+                $ps->bindParam(++$i, $entity->getNome(), PDO::PARAM_STR);
                 $resultado = $ps->execute();
                 $entity->setId($conexao->lastInsertId());
                 $ps = null;
@@ -73,12 +72,6 @@ class UsuarioDAO {
                         $sql .= " and lower(nome) like lower('%$aux%')";
                     }
                 }
-                if (array_key_exists(UsuarioCriteria::DATA_HORA_LK, $criteria)) {
-                    $aux = $criteria[UsuarioCriteria::DATA_HORA_LK];
-                    if ($aux != null && strlen($aux) > 0) {
-                        $sql .= " and lower(data_hora) like lower('%$aux%')";
-                    }
-                }
             }
 
             if ($limit > 0) {
@@ -97,7 +90,6 @@ class UsuarioDAO {
                     $entity->setLogin($linha['login']);
                     $entity->setSenha($linha['senha']);
                     $entity->setNome($linha['nome']);
-                    $entity->setDataHora($linha['data_hora']);
                     $entityArray[] = $entity;
                 }
                 $ps = null;
@@ -122,7 +114,6 @@ class UsuarioDAO {
                     $entity->setLogin($linha['login']);
                     $entity->setSenha($linha['senha']);
                     $entity->setNome($linha['nome']);
-                    $entity->setDataHora($linha['data_hora']);
                 }
                 $ps = null;
             } catch (PDOException $e) {
@@ -137,13 +128,12 @@ class UsuarioDAO {
         if ($conexao != null && is_a($entity, 'Usuario')) {
             try {
                 $i = 0;
-                $sql = "update usuario set login = ?, senha = ?, nome = ?, data_hora = ? where id = ?";
+                $sql = "update usuario set login = ?, senha = ?, nome = ? where id = ?";
                 $ps = $conexao->prepare($sql);
-                $ps->bindParam( ++$i, $entity->getLogin(), PDO::PARAM_STR);
-                $ps->bindParam( ++$i, $entity->getSenha(), PDO::PARAM_STR);
-                $ps->bindParam( ++$i, $entity->getNome(), PDO::PARAM_STR);
-                $ps->bindParam( ++$i, $entity->getDataHora(), PDO::PARAM_STR);
-                $ps->bindParam( ++$i, $entity->getId(), PDO::PARAM_INT);
+                $ps->bindParam(++$i, $entity->getLogin(), PDO::PARAM_STR);
+                $ps->bindParam(++$i, $entity->getSenha(), PDO::PARAM_STR);
+                $ps->bindParam(++$i, $entity->getNome(), PDO::PARAM_STR);
+                $ps->bindParam(++$i, $entity->getId(), PDO::PARAM_INT);
                 $resultado = $ps->execute();
                 $ps = null;
             } catch (PDOException $e) {

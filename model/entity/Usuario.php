@@ -7,11 +7,14 @@ class Usuario extends BaseEntity {
     protected $login;
     protected $senha;
     protected $nome;
-    protected $dataHora;
     protected $rastreadorArray;
 
+    public function __construct() {
+        $this->rastreadorArray = array();
+    }
+
     public function __toString() {
-        return "$this->id# $this->login# $this->senha# $this->nome# $this->dataHora";
+        return "$this->id# $this->login# $this->senha# $this->nome";
     }
 
     public function getLogin() {
@@ -24,10 +27,6 @@ class Usuario extends BaseEntity {
 
     public function getNome() {
         return $this->nome;
-    }
-
-    public function getDataHora() {
-        return $this->dataHora;
     }
 
     public function getRastreadorArray() {
@@ -46,12 +45,8 @@ class Usuario extends BaseEntity {
         $this->nome = $nome;
     }
 
-    public function setDataHora($dataHora) {
-        $this->dataHora = $dataHora;
-    }
-
-    public function setRastreadorArray($registradorArray) {
-        $this->rastreadorArray = $registradorArray;
+    public function setRastreadorArray($rastreadorArray) {
+        $this->rastreadorArray = $rastreadorArray;
     }
 
 }

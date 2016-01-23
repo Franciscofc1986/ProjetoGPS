@@ -10,11 +10,12 @@ class CoordenadaDAO {
         if ($conexao != null && is_a($entity, 'Coordenada')) {
             try {
                 $i = 0;
-                $sql = "insert into coordenada (latitude, longitude, data_hora, rastreador_fk) values (?, ?, ?, ?)";
+                $sql = "insert into coordenada (latitude, longitude, data_hora, hdop, rastreador_fk) values (?, ?, ?, ?, ?)";
                 $ps = $conexao->prepare($sql);
                 $ps->bindParam(++$i, $entity->getLatitude(), PDO::PARAM_STR);
                 $ps->bindParam(++$i, $entity->getLongitude(), PDO::PARAM_STR);
                 $ps->bindParam(++$i, $entity->getDataHora(), PDO::PARAM_STR);
+                $ps->bindParam(++$i, $entity->getHdop(), PDO::PARAM_STR);
                 $rastreadorFk = ($entity->getRastreador() != null) ? $entity->getRastreador()->getId() : NULL;
                 $ps->bindParam(++$i, $rastreadorFk, PDO::PARAM_INT);
                 $resultado = $ps->execute();
@@ -86,6 +87,7 @@ class CoordenadaDAO {
                     $entity->setLatitude($linha['latitude']);
                     $entity->setLongitude($linha['longitude']);
                     $entity->setDataHora($linha['data_hora']);
+                    $entity->setHdop($linha['hdop']);
                     $rastreador = new Rastreador();
                     $rastreador->setId($linha['rastreador_fk']);
                     $entity->setRastreador($rastreador);
@@ -113,6 +115,7 @@ class CoordenadaDAO {
                     $entity->setLatitude($linha['latitude']);
                     $entity->setLongitude($linha['longitude']);
                     $entity->setDataHora($linha['data_hora']);
+                    $entity->setHdop($linha['hdop']);
                     $rastreador = new Rastreador();
                     $rastreador->setId($linha['rastreador_fk']);
                     $entity->setRastreador($rastreador);
@@ -130,11 +133,12 @@ class CoordenadaDAO {
         if ($conexao != null && is_a($entity, 'Coordenada')) {
             try {
                 $i = 0;
-                $sql = "update coordenada set latitude = ?, longitude = ?, data_hora = ?, rastreador_fk = ? where id = ?";
+                $sql = "update coordenada set latitude = ?, longitude = ?, data_hora = ?, hdop = ?, rastreador_fk = ? where id = ?";
                 $ps = $conexao->prepare($sql);
                 $ps->bindParam(++$i, $entity->getLatitude(), PDO::PARAM_STR);
                 $ps->bindParam(++$i, $entity->getLongitude(), PDO::PARAM_STR);
                 $ps->bindParam(++$i, $entity->getDataHora(), PDO::PARAM_STR);
+                $ps->bindParam(++$i, $entity->getHdop(), PDO::PARAM_STR);
                 $rastreadorFk = ($entity->getRastreador() != null) ? $entity->getRastreador()->getId() : NULL;
                 $ps->bindParam(++$i, $rastreadorFk, PDO::PARAM_INT);
                 $ps->bindParam(++$i, $entity->getId(), PDO::PARAM_INT);

@@ -9,11 +9,7 @@ function testeCreate() {
     $entity = new Rastreador();
     $entity->setSerial("PQ482");
     $entity->setNome("Rastreador teste");
-    $entity->setDataHora(date('Y-m-d H-i-s'));
-
-    $coordenada = new Coordenada();
-    $coordenada->setId(12);
-    $entity->setUltimaCoordenada($coordenada);
+    $entity->setPublico(true);
 
     echo "Resultado: " . ServiceLocator::getRastreadorService()->create($entity);
 }
@@ -27,10 +23,7 @@ function testeUpdate() {
     $entity->setId(5);
     $entity->setSerial("PQ406");
     $entity->setNome("Rastreador teste");
-    $entity->setDataHora(date('Y-m-d H-i-s'));
-    $coordenada = new Coordenada();
-    $coordenada->setId(7);
-    $entity->setUltimaCoordenada($coordenada);
+    $entity->setPublico(true);
 
     echo "Resultado: " . ServiceLocator::getRastreadorService()->update($entity);
 }
@@ -41,7 +34,7 @@ function testeReadById() {
 
 function testeReadByCriteria() {
     $criteria = array();
-    $criteria[RastreadorCriteria::DATA_HORA_LK] = date('Y-m-d');
+    $criteria[RastreadorCriteria::PUBLICO_EQ] = true;
     $entityArray = ServiceLocator::getRastreadorService()->readByCriteria($criteria);
     foreach ($entityArray as $entity) {
         echo $entity . "<br>";

@@ -8,24 +8,24 @@ include_once realpath(__DIR__) . '/../../../model/dao/criteria/RastreadorCriteri
 
 // TESTE CREATE
 //$entity = new Rastreador();
-//$entity->setSerial("PQ456");
+//$entity->setSerial("PQ459");
 //$entity->setNome("Rastreador teste");
-//$entity->setDataHora(date('Y-m-d H-i-s'));
+//$entity->setPublico(false);
 //echo testeCreate($entity);
 // TESTE DELETE
-//echo testeDelete(3);
+//echo testeDelete(14);
 // TESTE UPDATE
 //$entity = new Rastreador();
-//$entity->setId(8);
-//$entity->setSerial("PQ456");
+//$entity->setId(11);
+//$entity->setSerial("PQ111");
 //$entity->setNome("Rastreador teste");
-//$entity->setDataHora(date('Y-m-d H-i-s'));
+//$entity->setPublico(true);
 //echo testeUpdate($entity);
 // TESTE READ BY ID
-//echo testeReadById(6);
+//echo testeReadById(5);
 // TESTE READ BY CRITERIA
 //$criteria = array();
-//$criteria[RastreadorCriteria::DATA_HORA_LK] = date('Y-m-d');
+//$criteria[RastreadorCriteria::PUBLICO_EQ] = false;
 //$entityArray = testeReadByCriteria($criteria);
 //foreach ($entityArray as $entity) {
 //    echo "$entity<br>";

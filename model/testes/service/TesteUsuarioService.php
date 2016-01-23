@@ -10,7 +10,6 @@ function testeCreate() {
     $entity->setLogin("UsuarioTeste");
     $entity->setSenha("senhaTeste");
     $entity->setNome("Usuario Teste");
-    $entity->setDataHora(date('Y-m-d H-i-s'));
     echo "Resultado: " . ServiceLocator::getUsuarioService()->create($entity);
 }
 
@@ -24,7 +23,6 @@ function testeUpdate() {
     $entity->setLogin("UsuarioTeste");
     $entity->setSenha("senhaTeste");
     $entity->setNome("Usuario Teste");
-    $entity->setDataHora(date('Y-m-d H-i-s'));
     echo "Resultado: " . ServiceLocator::getUsuarioService()->update($entity);
 }
 
@@ -35,7 +33,6 @@ function testeReadById() {
 function testeReadByCriteria() {
     $criteria = array();
     $criteria[UsuarioCriteria::NOME_LK] = "B";
-//    $criteria[UsuarioCriteria::SENHA_EQ] = "1111";
     $entityArray = ServiceLocator::getUsuarioService()->readByCriteria($criteria);
     foreach ($entityArray as $entity) {
         echo $entity . "<br>";

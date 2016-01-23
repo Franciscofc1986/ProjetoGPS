@@ -6,6 +6,6 @@ abstract class RastreadorCriteria {
     const SERIAL_EQ = 1;
     const NOME_EQ = 2;
     const NOME_LK = 3;
-    const DATA_HORA_LK = 4;
+    const PUBLICO_EQ = 4;
 
 }

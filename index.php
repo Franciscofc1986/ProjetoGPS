@@ -13,8 +13,10 @@
 //include_once realpath(__DIR__) . './model/testes/dao/TesteCoordenadaDAO.php';
 //include_once realpath(__DIR__) . './model/testes/dao/TesteRastreadorDAO.php';
 //include_once realpath(__DIR__) . './model/testes/dao/TesteUsuarioDAO.php';
+//include_once realpath(__DIR__) . './model/testes/dao/TesteUsuarioRastreadorDAO.php';
 //include_once realpath(__DIR__) . './model/testes/service/TesteCoordenadaService.php';
 //include_once realpath(__DIR__) . './model/testes/service/TesteRastreadorService.php';
 //include_once realpath(__DIR__) . './model/testes/service/TesteUsuarioService.php';
+//include_once realpath(__DIR__) . './model/testes/service/TesteUsuarioRastreadorService.php';
 include_once realpath(__DIR__) . './model/testes/TestesGerais.php';
 ?>
