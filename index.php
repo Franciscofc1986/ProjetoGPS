@@ -18,5 +18,5 @@
 //include_once realpath(__DIR__) . './model/testes/service/TesteRastreadorService.php';
 //include_once realpath(__DIR__) . './model/testes/service/TesteUsuarioService.php';
 //include_once realpath(__DIR__) . './model/testes/service/TesteUsuarioRastreadorService.php';
-include_once realpath(__DIR__) . './model/testes/TestesGerais.php';
+//include_once realpath(__DIR__) . './model/testes/TestesGerais.php';
 ?>

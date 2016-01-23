@@ -2,24 +2,23 @@
 
 include_once realpath(__DIR__) . '/../../model/service/ServiceLocator.php';
 include_once realpath(__DIR__) . '/../../model/entity/Rastreador.php';
-//include_once realpath(__DIR__) . '/../../model/entity/Coordenada.php';
-//include_once realpath(__DIR__) . '/../../model/entity/Usuario.php';
-//include_once realpath(__DIR__) . '/../../model/entity/UsuarioRastreador.php';
-//include_once realpath(__DIR__) . '/../../model/dao/criteria/RastreadorCriteria.php';
-//include_once realpath(__DIR__) . '/../../model/dao/criteria/CoordenadaCriteria.php';
-//include_once realpath(__DIR__) . '/../../model/dao/criteria/UsuarioCriteria.php';
-//include_once realpath(__DIR__) . '/../../model/dao/criteria/UsuarioRastreadorCriteria.php';
-//include_once realpath(__DIR__) . '/../../model/service/RastreadorService.php';
-//include_once realpath(__DIR__) . '/../../model/service/CoordenadaService.php';
-//include_once realpath(__DIR__) . '/../../model/service/UsuarioService.php';
-//include_once realpath(__DIR__) . '/../../model/service/UsuarioRastreadorService.php';
-//include_once realpath(__DIR__) . '/../../model/service/ConnectionManager.php';
+include_once realpath(__DIR__) . '/../../model/entity/Coordenada.php';
+include_once realpath(__DIR__) . '/../../model/entity/Usuario.php';
+include_once realpath(__DIR__) . '/../../model/entity/UsuarioRastreador.php';
+include_once realpath(__DIR__) . '/../../model/dao/criteria/RastreadorCriteria.php';
+include_once realpath(__DIR__) . '/../../model/dao/criteria/CoordenadaCriteria.php';
+include_once realpath(__DIR__) . '/../../model/dao/criteria/UsuarioCriteria.php';
+include_once realpath(__DIR__) . '/../../model/dao/criteria/UsuarioRastreadorCriteria.php';
+include_once realpath(__DIR__) . '/../../model/service/RastreadorService.php';
+include_once realpath(__DIR__) . '/../../model/service/CoordenadaService.php';
+include_once realpath(__DIR__) . '/../../model/service/UsuarioService.php';
+include_once realpath(__DIR__) . '/../../model/service/UsuarioRastreadorService.php';
+include_once realpath(__DIR__) . '/../../model/service/ConnectionManager.php';
+
 //$coordenadaArray = obterCoordenadasDeRastreador("PQ129");
 //foreach ($coordenadaArray as $coordenada) {
 //    echo "$coordenada<br>";
 //}
-
-inserirRastreador();
 
 function obterCoordenadasDeRastreador($serial) {
     $criteria = array();
