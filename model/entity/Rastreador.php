@@ -6,6 +6,7 @@ include_once realpath(__DIR__) . '/../../model/entity/Coordenada.php';
 class Rastreador extends BaseEntity {
 
     protected $serial;
+    protected $token;
     protected $nome;
     protected $publico;
     protected $usuarioArray;
@@ -18,11 +19,15 @@ class Rastreador extends BaseEntity {
     }
 
     public function __toString() {
-        return "$this->id# $this->serial# $this->nome# $this->publico# $this->ultimaCoordenada";
+        return "$this->id# $this->serial# $this->token# $this->nome# $this->publico# $this->ultimaCoordenada";
     }
 
     public function getSerial() {
         return $this->serial;
+    }
+
+    public function getToken() {
+        return $this->token;
     }
 
     public function getNome() {
@@ -36,7 +41,7 @@ class Rastreador extends BaseEntity {
     public function getUsuarioArray() {
         return $this->usuarioArray;
     }
-    
+
     public function getUltimaCoordenada() {
         return $this->ultimaCoordenada;
     }
@@ -47,6 +52,10 @@ class Rastreador extends BaseEntity {
 
     public function setSerial($serial) {
         $this->serial = $serial;
+    }
+
+    public function setToken($token) {
+        $this->token = $token;
     }
 
     public function setNome($nome) {
@@ -64,7 +73,7 @@ class Rastreador extends BaseEntity {
     public function setUltimaCoordenada(Coordenada $ultimaCoordenada) {
         $this->ultimaCoordenada = $ultimaCoordenada;
     }
-    
+
     public function setCoordenadaArray($coordenadaArray) {
         $this->coordenadaArray = $coordenadaArray;
     }

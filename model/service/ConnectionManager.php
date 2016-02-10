@@ -5,7 +5,7 @@ class ConnectionManager {
     private static $drive = "mysql";
     private static $ip = "127.0.0.1";
     private static $porta = 3306;
-    private static $banco = "test";
+    private static $banco = "rastreadorgps";
     private static $usuario = "root";
     private static $senha = "";
 

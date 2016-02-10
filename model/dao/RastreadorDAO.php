@@ -10,11 +10,12 @@ class RastreadorDAO {
         if ($conexao != null && is_a($entity, 'Rastreador')) {
             try {
                 $i = 0;
-                $sql = "insert into rastreador (serial, nome, publico) values (?, ?, ?)";
+                $sql = "insert into rastreador (serial, token, nome, publico) values (?, ?, ?, ?)";
                 $ps = $conexao->prepare($sql);
-                $ps->bindParam( ++$i, $entity->getSerial(), PDO::PARAM_STR);
-                $ps->bindParam( ++$i, $entity->getNome(), PDO::PARAM_STR);
-                $ps->bindParam( ++$i, $entity->isPublico(), PDO::PARAM_BOOL);
+                $ps->bindParam(++$i, $entity->getSerial(), PDO::PARAM_STR);
+                $ps->bindParam(++$i, $entity->getToken(), PDO::PARAM_STR);
+                $ps->bindParam(++$i, $entity->getNome(), PDO::PARAM_STR);
+                $ps->bindParam(++$i, $entity->isPublico(), PDO::PARAM_BOOL);
                 $resultado = $ps->execute();
                 $entity->setId($conexao->lastInsertId());
                 $ps = null;
@@ -60,6 +61,12 @@ class RastreadorDAO {
                         $sql .= " and serial = '$aux' COLLATE latin1_bin";
                     }
                 }
+                if (array_key_exists(RastreadorCriteria::TOKEN_EQ, $criteria)) {
+                    $aux = $criteria[RastreadorCriteria::TOKEN_EQ];
+                    if ($aux != null && strlen($aux) > 0) {
+                        $sql .= " and token = '$aux' COLLATE latin1_bin";
+                    }
+                }
                 if (array_key_exists(RastreadorCriteria::NOME_EQ, $criteria)) {
                     $aux = $criteria[RastreadorCriteria::NOME_EQ];
                     if ($aux != null && strlen($aux) > 0) {
@@ -95,6 +102,7 @@ class RastreadorDAO {
                     $rastreador = new Rastreador();
                     $rastreador->setId($linha['id']);
                     $rastreador->setSerial($linha['serial']);
+                    $rastreador->setToken($linha['token']);
                     $rastreador->setNome($linha['nome']);
                     $rastreador->setPublico($linha['publico']);
                     $rastreadorArray[] = $rastreador;
@@ -119,6 +127,7 @@ class RastreadorDAO {
                     $rastreador = new Rastreador();
                     $rastreador->setId($linha['id']);
                     $rastreador->setSerial($linha['serial']);
+                    $rastreador->setToken($linha['token']);
                     $rastreador->setNome($linha['nome']);
                     $rastreador->setPublico($linha['publico']);
                 }
@@ -135,12 +144,13 @@ class RastreadorDAO {
         if ($conexao != null && is_a($entity, 'Rastreador')) {
             try {
                 $i = 0;
-                $sql = "update rastreador set serial = ?, nome = ?, publico = ? where id = ?";
+                $sql = "update rastreador set serial = ?, token = ?, nome = ?, publico = ? where id = ?";
                 $ps = $conexao->prepare($sql);
-                $ps->bindParam( ++$i, $entity->getSerial(), PDO::PARAM_STR);
-                $ps->bindParam( ++$i, $entity->getNome(), PDO::PARAM_STR);
-                $ps->bindParam( ++$i, $entity->isPublico(), PDO::PARAM_BOOL);
-                $ps->bindParam( ++$i, $entity->getId(), PDO::PARAM_INT);
+                $ps->bindParam(++$i, $entity->getSerial(), PDO::PARAM_STR);
+                $ps->bindParam(++$i, $entity->getToken(), PDO::PARAM_STR);
+                $ps->bindParam(++$i, $entity->getNome(), PDO::PARAM_STR);
+                $ps->bindParam(++$i, $entity->isPublico(), PDO::PARAM_BOOL);
+                $ps->bindParam(++$i, $entity->getId(), PDO::PARAM_INT);
                 $resultado = $ps->execute();
                 $ps = null;
             } catch (PDOException $e) {

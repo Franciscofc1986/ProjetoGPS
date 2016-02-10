@@ -15,9 +15,14 @@ include_once realpath(__DIR__) . '/../../model/service/UsuarioService.php';
 include_once realpath(__DIR__) . '/../../model/service/UsuarioRastreadorService.php';
 include_once realpath(__DIR__) . '/../../model/service/ConnectionManager.php';
 
-function obterCoordenadasDeRastreador($serial) {
+$coordenadas = obterCoordenadasDeRastreador();
+foreach ($coordenadas as $coordenada) {
+    echo $coordenada . "<br>";
+}
+
+function obterCoordenadasDeRastreador() {
     $criteria = array();
-    $criteria[RastreadorCriteria::ID_EQ] = 4;
+    $criteria[RastreadorCriteria::ID_EQ] = 5;
     $rastreadorArray = ServiceLocator::getRastreadorService()->readByCriteria($criteria);
 
     $criteria = array();

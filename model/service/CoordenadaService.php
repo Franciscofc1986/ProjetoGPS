@@ -1,15 +1,14 @@
 <?php
 
 include_once realpath(__DIR__) . '/../../model/entity/Coordenada.php';
-include_once realpath(__DIR__) . '/../../model/entity/Rastreador.php';
 include_once realpath(__DIR__) . '/../../model/dao/CoordenadaDAO.php';
-include_once realpath(__DIR__) . '/../../model/dao/RastreadorDAO.php';
 include_once realpath(__DIR__) . '/../../model/service/ConnectionManager.php';
 
 class CoordenadaService {
 
     public function create($coordenada) {
         $resultado = false;
+        $conexao = null;
         try {
             $conexao = ConnectionManager::getConexao();
             $conexao->beginTransaction();
@@ -21,7 +20,9 @@ class CoordenadaService {
             }
             $conexao->commit();
         } catch (Exception $ex) {
-            $conexao->rollback();
+            if ($conexao != null) {
+                $conexao->rollback();
+            }
             echo $ex->getMessage();
         } finally {
             $conexao = null;
@@ -31,6 +32,7 @@ class CoordenadaService {
 
     public function delete($id) {
         $resultado = false;
+        $conexao = null;
         try {
             $conexao = ConnectionManager::getConexao();
             $conexao->beginTransaction();
@@ -38,7 +40,9 @@ class CoordenadaService {
             $resultado = $dao->delete($conexao, $id);
             $conexao->commit();
         } catch (Exception $ex) {
-            $conexao->rollback();
+            if ($conexao != null) {
+                $conexao->rollback();
+            }
             echo $ex->getMessage();
         } finally {
             $conexao = null;
@@ -48,6 +52,7 @@ class CoordenadaService {
 
     public function readByCriteria($criteria = null, $offset = -1, $limit = -1) {
         $entityArray = null;
+        $conexao = null;
         try {
             $conexao = ConnectionManager::getConexao();
             $conexao->beginTransaction();
@@ -55,7 +60,9 @@ class CoordenadaService {
             $entityArray = $dao->readByCriteria($conexao, $criteria, $offset, $limit);
             $conexao->commit();
         } catch (Exception $ex) {
-            $conexao->rollback();
+            if ($conexao != null) {
+                $conexao->rollback();
+            }
             echo $ex->getMessage();
         } finally {
             $conexao = null;
@@ -65,6 +72,7 @@ class CoordenadaService {
 
     public function readById($id) {
         $entity = null;
+        $conexao = null;
         try {
             $conexao = ConnectionManager::getConexao();
             $conexao->beginTransaction();
@@ -72,7 +80,9 @@ class CoordenadaService {
             $entity = $dao->readById($conexao, $id);
             $conexao->commit();
         } catch (Exception $ex) {
-            $conexao->rollback();
+            if ($conexao != null) {
+                $conexao->rollback();
+            }
             echo $ex->getMessage();
         } finally {
             $conexao = null;
@@ -82,6 +92,7 @@ class CoordenadaService {
 
     public function update($entity) {
         $resultado = false;
+        $conexao = null;
         try {
             $conexao = ConnectionManager::getConexao();
             $conexao->beginTransaction();
@@ -89,7 +100,9 @@ class CoordenadaService {
             $resultado = $dao->update($conexao, $entity);
             $conexao->commit();
         } catch (Exception $ex) {
-            $conexao->rollback();
+            if ($conexao != null) {
+                $conexao->rollback();
+            }
             echo $ex->getMessage();
         } finally {
             $conexao = null;

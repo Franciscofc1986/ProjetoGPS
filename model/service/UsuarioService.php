@@ -11,6 +11,7 @@ class UsuarioService {
 
     public function create($entity) {
         $resultado = false;
+        $conexao = null;
         try {
             $conexao = ConnectionManager::getConexao();
             $conexao->beginTransaction();
@@ -18,7 +19,9 @@ class UsuarioService {
             $resultado = $dao->create($conexao, $entity);
             $conexao->commit();
         } catch (Exception $ex) {
-            $conexao->rollback();
+            if ($conexao != null) {
+                $conexao->rollback();
+            }
             echo $ex->getMessage();
         } finally {
             $conexao = null;
@@ -28,6 +31,7 @@ class UsuarioService {
 
     public function delete($id) {
         $resultado = false;
+        $conexao = null;
         try {
             $conexao = ConnectionManager::getConexao();
             $conexao->beginTransaction();
@@ -35,7 +39,9 @@ class UsuarioService {
             $resultado = $dao->delete($conexao, $id);
             $conexao->commit();
         } catch (Exception $ex) {
-            $conexao->rollback();
+            if ($conexao != null) {
+                $conexao->rollback();
+            }
             echo $ex->getMessage();
         } finally {
             $conexao = null;
@@ -45,6 +51,7 @@ class UsuarioService {
 
     public function readByCriteria($criteria = null, $offset = -1, $limit = -1) {
         $entityArray = null;
+        $conexao = null;
         try {
             $conexao = ConnectionManager::getConexao();
             $conexao->beginTransaction();
@@ -55,7 +62,9 @@ class UsuarioService {
             }
             $conexao->commit();
         } catch (Exception $ex) {
-            $conexao->rollback();
+            if ($conexao != null) {
+                $conexao->rollback();
+            }
             echo $ex->getMessage();
         } finally {
             $conexao = null;
@@ -65,6 +74,7 @@ class UsuarioService {
 
     public function readById($id) {
         $entity = null;
+        $conexao = null;
         try {
             $conexao = ConnectionManager::getConexao();
             $conexao->beginTransaction();
@@ -73,7 +83,9 @@ class UsuarioService {
             $this->buscarRastreadoresDeUsuario($conexao, $entity);
             $conexao->commit();
         } catch (Exception $ex) {
-            $conexao->rollback();
+            if ($conexao != null) {
+                $conexao->rollback();
+            }
             echo $ex->getMessage();
         } finally {
             $conexao = null;
@@ -83,6 +95,7 @@ class UsuarioService {
 
     public function update($entity) {
         $resultado = false;
+        $conexao = null;
         try {
             $conexao = ConnectionManager::getConexao();
             $conexao->beginTransaction();
@@ -90,7 +103,9 @@ class UsuarioService {
             $resultado = $dao->update($conexao, $entity);
             $conexao->commit();
         } catch (Exception $ex) {
-            $conexao->rollback();
+            if ($conexao != null) {
+                $conexao->rollback();
+            }
             echo $ex->getMessage();
         } finally {
             $conexao = null;
