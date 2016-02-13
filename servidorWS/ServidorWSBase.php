@@ -71,34 +71,42 @@ class ServidorWSBase {
         foreach ($socketsRead as $socketRead) {
             // Verifica mensagens recebidas
             while (socket_recv($socketRead, $buffer, 1024, 0) >= 1) {
-                $this->tratarMensagemRecebida($buffer, $socketRead);
+                $this->tratarRecebimentoDeMensagem($buffer, $socketRead);
                 break 2;
             }
 
             // Verifica se cliente continua conectado
             $buffer = @socket_read($socketRead, 1024, PHP_NORMAL_READ);
             if ($buffer === false) {
-                $this->clienteWSController->removerClientePorSocket($socketRead);
-                $this->printar("Cliente desconectado.\n");
+                $this->tratarDesconexao($socketRead);
             }
         }
     }
 
     protected function tratarSolicitacaoDeConexao($cabecalho, $socket) {
         if ($cabecalho != null && $socket != null) {
-            $this->printar("Handshake Recebido:\n$cabecalho");
+            $this->printar("Handshake Recebido:\n$cabecalho", true);
             $this->executarHandshaking($cabecalho, $socket);
             $clienteWS = new ClienteWSBase();
             $clienteWS->setSocket($socket);
             $this->clienteWSController->adicionarCliente($clienteWS);
-            $this->printar("Cliente conectado (Pai).\n");
+            $this->printar("Cliente conectado.\n", false);
         }
     }
 
-    protected function tratarMensagemRecebida($buffer, $socket) {
+    protected function tratarRecebimentoDeMensagem($buffer, $socket) {
         if ($buffer != null && $socket != null) {
             $mensagem = $this->desmascarar($buffer);
-            $this->printar("Mensagem Recebida:\n$mensagem\n");
+            $this->printar("Mensagem Recebida:\n$mensagem\n", true);
+        }
+    }
+
+    protected function tratarDesconexao($socket) {
+        if ($socket != null) {
+            $clienteWS = $this->clienteWSController->removerClientePorSocket($socket);
+            if ($clienteWS != null) {
+                $this->printar("Cliente desconectado.\n", true);
+            }
         }
     }
 
@@ -113,7 +121,7 @@ class ServidorWSBase {
         $msgMascarada = $this->mascarar($mensagem);
         $msgEnviada = @socket_write($socket, $msgMascarada, strlen($msgMascarada));
         if ($msgEnviada !== false) {
-            $this->printar("Mensagem Enviada:\n$mensagem\n");
+            $this->printar("Mensagem Enviada:\n$mensagem\n", true);
         }
         return $msgEnviada;
     }
@@ -167,12 +175,15 @@ class ServidorWSBase {
                 "WebSocket-Location: ws://$this->ip:$this->porta\r\n" .
                 "Sec-WebSocket-Accept:$secAccept\r\n\r\n";
         socket_write($novoSocket, $upgrade, strlen($upgrade));
-        $this->printar("Handshake Enviado:\n$upgrade");
+        $this->printar("Handshake Enviado:\n$upgrade", false);
     }
 
-    protected function printar($mensagem) {
+    protected function printar($mensagem, $inserirBarra) {
         if ($this->printarEventos) {
-            echo "--------------------------------------------------------------\n$mensagem";
+            if ($inserirBarra === true) {
+                echo "--------------------------------------------------------------\n";
+            }
+            echo $mensagem;
         }
     }
 

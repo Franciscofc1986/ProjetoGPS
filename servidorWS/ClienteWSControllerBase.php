@@ -46,15 +46,16 @@ class ClienteWSControllerBase {
     }
 
     public function removerClientePorSocket($socket) {
+        $clienteRemovido = null;
         if ($socket != null) {
             foreach ($this->clienteArray as $chave => $cliente) {
                 if ($cliente->getSocket() == $socket) {
+                    $clienteRemovido = $this->clienteArray[$chave];
                     unset($this->clienteArray[$chave]);
-                    return true;
                 }
             }
         }
-        return false;
+        return $clienteRemovido;
     }
 
     public function buscarClientePorSocket($socket) {
