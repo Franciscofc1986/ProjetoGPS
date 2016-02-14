@@ -1,6 +1,8 @@
 <?php
 
-class ClienteWSBase {
+include_once realpath(__DIR__) . '/../model/entity/Comparavel.php';
+
+class ClienteWSBase implements Comparavel {
 
     protected $id;
     protected $socket;
@@ -23,6 +25,15 @@ class ClienteWSBase {
 
     public function setSocket($socket) {
         $this->socket = $socket;
+    }
+
+    public function comparar($objeto) {
+        if (!is_a($objeto, __CLASS__) ||
+                $this->id !== $objeto->getId() ||
+                $this->socket != $objeto->getSocket()) {
+            return false;
+        }
+        return true;
     }
 
 }

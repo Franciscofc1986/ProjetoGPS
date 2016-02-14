@@ -1,8 +1,6 @@
 <?php
 
 include_once realpath(__DIR__) . '/../model/service/ServiceLocator.php';
-include_once realpath(__DIR__) . '/../model/entity/Coordenada.php';
-include_once realpath(__DIR__) . '/../model/entity/Rastreador.php';
 include_once realpath(__DIR__) . './ServidorWSBase.php';
 include_once realpath(__DIR__) . './ClienteWSRastreador.php';
 include_once realpath(__DIR__) . './ClienteWSControllerRastreador.php';
@@ -19,41 +17,51 @@ class ServidorWSRastreador extends ServidorWSBase {
 
     protected function tratarSolicitacaoDeConexao($cabecalho, $socket) {
         if ($cabecalho != null && $socket != null) {
-            $this->printar("Handshake Recebido:\n$cabecalho", true);
+            $this->printar("Handshake Recebido:\n$cabecalho", true, true);
             preg_match('/(?<=GET \/)[^\s]*/', $cabecalho, $aux);
             $parametros = split(';', $aux[0]);
             $tipoCliente = $parametros[0];
-            $id = $parametros[1];
-            if ($tipoCliente != null && $id != null) {
+            if ($this->validarTipoCliente($tipoCliente)) {
                 $cadastro = null;
-                // VERIFICA SE CLIENTE JÁ ESTÁ CONECTADO
-                $clienteWS = $this->clienteWSController->buscarCliente($tipoCliente, $id);
-                if ($clienteWS == null) {
-                    switch ($tipoCliente) {
-                        case TipoCliente::USUARIO:
-                            $cadastro = ServiceLocator::getUsuarioService()->readById($id);
-                            break;
-                        case TipoCliente::RASTREADOR:
-                            $cadastro = ServiceLocator::getRastreadorService()->readById($id);
-                            break;
-                    }
-                    if ($cadastro != null) {
+                switch ($tipoCliente) {
+                    case TipoCliente::USUARIO:
+                        $login = $parametros[1];
+                        $senha = $parametros[2];
+                        if ($login != '' && $senha != '') {
+                            $criteria = array();
+                            $criteria[UsuarioCriteria::LOGIN_EQ] = $login;
+                            $criteria[UsuarioCriteria::SENHA_EQ] = $senha;
+                            $cadastro = ServiceLocator::getUsuarioService()->readByCriteria($criteria)[0];
+                        }
+                        break;
+                    case TipoCliente::RASTREADOR:
+                        $serial = $parametros[1];
+                        if ($serial != '') {
+                            $criteria = array();
+                            $criteria[RastreadorCriteria::SERIAL_EQ] = $serial;
+                            $cadastro = ServiceLocator::getRastreadorService()->readByCriteria($criteria)[0];
+                        }
+                        break;
+                }
+                if ($cadastro != null) {
+                    $clienteWS = $this->clienteWSController->buscarClientePorCadastro($cadastro);
+                    if ($clienteWS == null) {
                         $this->executarHandshaking($cabecalho, $socket);
                         $clienteWS = new ClienteWSRastreador();
                         $clienteWS->setTipoCliente($tipoCliente);
-                        $clienteWS->setId($id);
+                        $clienteWS->setId($cadastro->getId());
                         $clienteWS->setSocket($socket);
                         $clienteWS->setCadastro($cadastro);
                         $this->clienteWSController->adicionarCliente($clienteWS);
-                        $this->printar($clienteWS->getCadastro()->getNome() . " se conectou.\n", false);
+                        $this->printar($clienteWS->getCadastro()->getNome() . " se conectou.\n", false, false);
                     } else {
-                        $this->printar("Usuario/Rastreador nao existe na base de dados.\n", false);
+                        $this->printar($clienteWS->getCadastro()->getNome() . " ja esta conectado.\n", false, false);
                     }
                 } else {
-                    $this->printar($clienteWS->getCadastro()->getNome() . " ja esta conectado.\n", false);
+                    $this->printar("Usuario/Rastreador nao existe na base de dados.\n", false, false);
                 }
             } else {
-                $this->printar("Parametros invalidos.\n", false);
+                $this->printar("Tipo de cliente invalido.\n", false, false);
             }
         }
     }
@@ -62,7 +70,7 @@ class ServidorWSRastreador extends ServidorWSBase {
         if ($buffer != null && $socket != null) {
             $clienteWS = $this->clienteWSController->buscarClientePorSocket($socket);
             $mensagem = $this->desmascarar($buffer);
-            $this->printar("Mensagem Recebida (" . $clienteWS->getCadastro()->getNome() . "):\n$mensagem\n", true);
+            $this->printar("Mensagem Recebida (" . $clienteWS->getCadastro()->getNome() . "):\n$mensagem\n", true, true);
             $valores = split(";", $mensagem);
             $tipoComunicacao = $valores[0];
             if ($this->validarTipoComunicacao($tipoComunicacao) === true) {
@@ -82,14 +90,14 @@ class ServidorWSRastreador extends ServidorWSBase {
                             break;
                     }
                 } else {
-                    $this->printar("Valores recebidos invalidos.\n", false);
+                    $this->printar("Valores recebidos invalidos.\n", false, false);
                     $resposta = array();
                     $resposta[] = $tipoComunicacao;
                     $resposta[] = 10;
                     $this->enviarValoresParaClienteWS($resposta, $clienteWS);
                 }
             } else {
-                $this->printar("Tipo de comunicacao invalida.\n", false);
+                $this->printar("Tipo de comunicacao invalida.\n", false, false);
             }
         }
     }
@@ -98,20 +106,27 @@ class ServidorWSRastreador extends ServidorWSBase {
         if ($socket != null) {
             $clienteWS = $this->clienteWSController->removerClientePorSocket($socket);
             if ($clienteWS != null) {
-                $this->printar($clienteWS->getCadastro()->getNome() . " se desconectou.\n", true);
+                $this->printar($clienteWS->getCadastro()->getNome() . " se desconectou.\n", true, true);
             }
         }
     }
 
+    private function validarTipoCliente($tipoCliente) {
+        if ($tipoCliente == TipoCliente::USUARIO ||
+                $tipoCliente == TipoCliente::RASTREADOR) {
+            return true;
+        }
+        return false;
+    }
+
     private function validarTipoComunicacao($tipoComunicacao) {
-        $resultado = false;
         if ($tipoComunicacao == TipoComunicacao::CONFIG_INICIAL_RASTREADOR ||
                 $tipoComunicacao == TipoComunicacao::CONFIG_RASTREADOR ||
                 $tipoComunicacao == TipoComunicacao::COORDENADA ||
                 $tipoComunicacao == TipoComunicacao::TESTE) {
-            $resultado = true;
+            return true;
         }
-        return $resultado;
+        return false;
     }
 
     private function validarValoresRecebidos($valorArray, $clienteWS) {
@@ -177,7 +192,7 @@ class ServidorWSRastreador extends ServidorWSBase {
     }
 
     private function tratarRecebimentoConfigInicialRastreador($valores, $clienteWS) {
-        $this->printar("CONFIGURACAO INICIAL RASTREADOR\n", false);
+        $this->printar("CONFIGURACAO INICIAL RASTREADOR\n", false, false);
 
         $clienteWSDestino = null;
         $resposta = array();
@@ -196,16 +211,36 @@ class ServidorWSRastreador extends ServidorWSBase {
                     if ($clienteWSRas != null) {
                         // VERIFICA SE USUÁRIO JÁ ESTÁ VINCULADO AO RASTREADOR
                         if ($this->verificarAcessoDeUsuarioAoRastreador($clienteWS->getCadastro(), $clienteWSRas->getCadastro()) != true) {
-                            // MENSAGEM DE CONFIGURAÇÃO INICIAL PARA RASTREADOR                               
-                            $clienteWSDestino = $clienteWSRas;
-                            $resposta[] = $rastreador->getId();
-                            $resposta[] = $rastreador->getSerial();
-                            $resposta[] = $rastreador->getToken();
-
-                            $clienteWS->setTipoComunicacaoAtual(TipoComunicacao::CONFIG_INICIAL_RASTREADOR);
-                            $clienteWS->setSocketPar($clienteWSRas->getSocket());
-                            $clienteWSRas->setTipoComunicacaoAtual(TipoComunicacao::CONFIG_INICIAL_RASTREADOR);
-                            $clienteWSRas->setSocketPar($clienteWS->getSocket());
+                            // VERIFICA SE RASTREADOR NÃO POSSUI NENHUM USUÁRIO VINCULADO
+                            if (count($rastreador->getUsuarioArray()) == 0) {
+                                // MENSAGEM DE CONFIGURAÇÃO INICIAL PARA RASTREADOR                               
+                                $clienteWSDestino = $clienteWSRas;
+                                $resposta[] = $rastreador->getId();
+                                $resposta[] = $rastreador->getSerial();
+                                $resposta[] = $rastreador->getToken();
+                                $clienteWS->setTipoComunicacaoAtual(TipoComunicacao::CONFIG_INICIAL_RASTREADOR);
+                                $clienteWS->setSocketPar($clienteWSRas->getSocket());
+                                $clienteWSRas->setTipoComunicacaoAtual(TipoComunicacao::CONFIG_INICIAL_RASTREADOR);
+                                $clienteWSRas->setSocketPar($clienteWS->getSocket());
+                            } else {
+                                // TENTA VINCULAR USUÁRIO A RASTREADOR
+                                $usuarioRastreador = new UsuarioRastreador();
+                                $usuarioRastreador->setUsuario($clienteWS->getCadastro());
+                                $usuarioRastreador->setRastreador($clienteWSRas->getCadastro());
+                                if (ServiceLocator::getUsuarioRastreadorService()->create($usuarioRastreador) == true) {
+                                    // MENSAGEM DE SUCESSO PARA USUÁRIO (OK)
+                                    $clienteWSDestino = $clienteWS;
+                                    $resposta[] = $clienteWS->getId();
+                                    $resposta[] = 1;
+                                    $clienteWS->atualizarCadastro();
+                                    $clienteWSRas->atualizarCadastro();
+                                } else {
+                                    // MENSAGEM DE ERRO PARA USUÁRIO (VICULAÇÃO USUÁRIO/RASTREADOR FALHOU)
+                                    $clienteWSDestino = $clienteWS;
+                                    $resposta[] = $clienteWSRas->getId();
+                                    $resposta[] = 22;
+                                }
+                            }
                         } else {
                             // MENSAGEM DE SUCESSO PARA USUÁRIO (RASTREAOR JÁ VINCULADO A USUÁRIO)
                             $clienteWSDestino = $clienteWS;
@@ -265,7 +300,7 @@ class ServidorWSRastreador extends ServidorWSBase {
     }
 
     private function tratarRecebimentoConfigRastreador($valores, $clienteWS) {
-        $this->printar("CONFIGURACAO RASTREADOR\n", false);
+        $this->printar("CONFIGURACAO RASTREADOR\n", false, false);
 
         $clienteWSDestino = null;
         $resposta = array();
@@ -336,7 +371,7 @@ class ServidorWSRastreador extends ServidorWSBase {
     }
 
     private function tratarRecebimentoCoordenada($valores, $clienteWS) {
-        $this->printar("COORDENADA\n", false);
+        $this->printar("COORDENADA\n", false, false);
 
         $clienteWSDestino = null;
         $resposta = array();
@@ -362,20 +397,20 @@ class ServidorWSRastreador extends ServidorWSBase {
     }
 
     private function tratarRecebimentoTeste($valores, $clienteWS) {
-        $this->printar("TESTE\n", false);
+        $this->printar("TESTE\n", false, false);
 
         $funcao = $valores[1];
         switch ($funcao) {
             case 1:
-                $this->printar("Printar Clientes\n", false);
+                $this->printar("Printar Clientes\n", false, false);
                 var_dump($this->clienteWSController->getClienteArray());
                 break;
             case 2:
-                $this->printar("Printar ClienteWS (tipoCliente, id)\n", false);
+                $this->printar("Printar ClienteWS (tipoCliente, id)\n", false, false);
                 var_dump($this->clienteWSController->buscarCliente($valores[2], $valores[3]));
                 break;
             case 3:
-                $this->printar("Printar ClienteWS atual\n", false);
+                $this->printar("Printar ClienteWS atual\n", false, false);
                 var_dump($clienteWS);
                 break;
         }

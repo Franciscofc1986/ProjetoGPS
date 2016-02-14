@@ -85,19 +85,19 @@ class ServidorWSBase {
 
     protected function tratarSolicitacaoDeConexao($cabecalho, $socket) {
         if ($cabecalho != null && $socket != null) {
-            $this->printar("Handshake Recebido:\n$cabecalho", true);
+            $this->printar("Handshake Recebido:\n$cabecalho", true, true);
             $this->executarHandshaking($cabecalho, $socket);
             $clienteWS = new ClienteWSBase();
             $clienteWS->setSocket($socket);
             $this->clienteWSController->adicionarCliente($clienteWS);
-            $this->printar("Cliente conectado.\n", false);
+            $this->printar("Cliente conectado.\n", false, false);
         }
     }
 
     protected function tratarRecebimentoDeMensagem($buffer, $socket) {
         if ($buffer != null && $socket != null) {
             $mensagem = $this->desmascarar($buffer);
-            $this->printar("Mensagem Recebida:\n$mensagem\n", true);
+            $this->printar("Mensagem Recebida:\n$mensagem\n", true, true);
         }
     }
 
@@ -105,7 +105,7 @@ class ServidorWSBase {
         if ($socket != null) {
             $clienteWS = $this->clienteWSController->removerClientePorSocket($socket);
             if ($clienteWS != null) {
-                $this->printar("Cliente desconectado.\n", true);
+                $this->printar("Cliente desconectado.\n", true, true);
             }
         }
     }
@@ -121,7 +121,7 @@ class ServidorWSBase {
         $msgMascarada = $this->mascarar($mensagem);
         $msgEnviada = @socket_write($socket, $msgMascarada, strlen($msgMascarada));
         if ($msgEnviada !== false) {
-            $this->printar("Mensagem Enviada:\n$mensagem\n", true);
+            $this->printar("Mensagem Enviada:\n$mensagem\n", true, true);
         }
         return $msgEnviada;
     }
@@ -175,13 +175,16 @@ class ServidorWSBase {
                 "WebSocket-Location: ws://$this->ip:$this->porta\r\n" .
                 "Sec-WebSocket-Accept:$secAccept\r\n\r\n";
         socket_write($novoSocket, $upgrade, strlen($upgrade));
-        $this->printar("Handshake Enviado:\n$upgrade", false);
+        $this->printar("Handshake Enviado:\n$upgrade", false, false);
     }
 
-    protected function printar($mensagem, $inserirBarra) {
+    protected function printar($mensagem, $inserirBarra = true, $inserirHora = true) {
         if ($this->printarEventos) {
             if ($inserirBarra === true) {
                 echo "--------------------------------------------------------------\n";
+            }
+            if ($inserirHora === true) {
+                echo "(" . date('Y/m/d H:i:s') . ")\n";
             }
             echo $mensagem;
         }

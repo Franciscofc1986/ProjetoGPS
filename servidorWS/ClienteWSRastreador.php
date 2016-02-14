@@ -1,8 +1,10 @@
 <?php
 
+include_once realpath(__DIR__) . '/../servidorWS/ClienteWSBase.php';
 include_once realpath(__DIR__) . '/../model/service/ServiceLocator.php';
+include_once realpath(__DIR__) . '/../model/entity/Comparavel.php';
 
-class ClienteWSRastreador extends ClienteWSBase {
+class ClienteWSRastreador extends ClienteWSBase implements Comparavel {
 
     protected $tipoCliente;
     protected $cadastro;
@@ -56,6 +58,25 @@ class ClienteWSRastreador extends ClienteWSBase {
                     break;
             }
         }
+    }
+
+    public function comparar($objeto) {
+        if (!is_a($objeto, __CLASS__) ||
+                $this->id !== $objeto->getId() ||
+                $this->socket != $objeto->getSocket() ||
+                $this->tipoCliente !== $objeto->getTipoCliente()) {
+            return false;
+        }
+        if ($this->cadastro == null || $objeto->getCadastro() == null) {
+            if ($this->cadastro != $objeto->getCadastro()) {
+                return false;
+            }
+        } else {
+            if ($this->cadastro->comparar($objeto->getCadastro()) === false) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

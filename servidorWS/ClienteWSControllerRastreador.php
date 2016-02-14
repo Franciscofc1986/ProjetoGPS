@@ -14,4 +14,15 @@ class ClienteWSControllerRastreador extends ClienteWSControllerBase {
         return null;
     }
 
+    public function buscarClientePorCadastro($cadastro) {
+        if ($cadastro != null) {
+            foreach ($this->clienteArray as $cliente) {
+                if ($cadastro->comparar($cliente->getCadastro())) {
+                    return $cliente;
+                }
+            }
+        }
+        return null;
+    }
+
 }

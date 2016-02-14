@@ -2,8 +2,9 @@
 
 include_once realpath(__DIR__) . '/../../model/entity/BaseEntity.php';
 include_once realpath(__DIR__) . '/../../model/entity/Rastreador.php';
+include_once realpath(__DIR__) . '/../../model/entity/Comparavel.php';
 
-class Coordenada extends BaseEntity {
+class Coordenada extends BaseEntity implements Comparavel {
 
     protected $latitude;
     protected $longitude;
@@ -54,6 +55,18 @@ class Coordenada extends BaseEntity {
 
     public function setRastreador(Rastreador $rastreador) {
         $this->rastreador = $rastreador;
+    }
+
+    public function comparar($objeto) {
+        if (!is_a($objeto, __CLASS__) ||
+                $this->id !== $objeto->getId() ||
+                $this->latitude !== $objeto->getLatitude() ||
+                $this->longitude !== $objeto->getLongitude() ||
+                $this->hdop !== $objeto->getHdop() ||
+                $this->dataHora !== $objeto->getDataHora()) {
+            return false;
+        }
+        return true;
     }
 
 }
